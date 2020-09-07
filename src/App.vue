@@ -1,32 +1,25 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <header>
+      <div id="topLine"></div>
+    </header>
+    <main>
+      <router-view></router-view>
+    </main>
   </div>
 </template>
-
+<script>
+export default {};
+</script>
 <style lang="scss">
+@import url("./assets/_reset.scss");
+@import url("./assets/Icon/iconfont.css");
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  #topLine {
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(90deg, #6510ad 30%, #104fad);
   }
+  
 }
 </style>

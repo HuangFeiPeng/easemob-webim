@@ -1,0 +1,65 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "139829",
+      "name": "群组多人",
+      "font_class": "qunzuduoren",
+      "unicode": "e6d6",
+      "unicode_decimal": 59094
+    },
+    {
+      "icon_id": "493216",
+      "name": "好友",
+      "font_class": "haoyou",
+      "unicode": "e783",
+      "unicode_decimal": 59267
+    },
+    {
+      "icon_id": "4409271",
+      "name": "聊天",
+      "font_class": "ziyuan",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "7235211",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "8288858",
+      "name": "列表",
+      "font_class": "liebiao",
+      "unicode": "e850",
+      "unicode_decimal": 59472
+    },
+    {
+      "icon_id": "8361763",
+      "name": "发送",
+      "font_class": "fasong",
+      "unicode": "e6bd",
+      "unicode_decimal": 59069
+    },
+    {
+      "icon_id": "10019542",
+      "name": "退出",
+      "font_class": "exittuichu",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
+      "icon_id": "14865127",
+      "name": "设置",
+      "font_class": "ziyuan156",
+      "unicode": "e6f0",
+      "unicode_decimal": 59120
+    }
+  ]
+}

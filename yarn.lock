@@ -3325,6 +3325,16 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
+easemob-webrtc@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/easemob-webrtc/-/easemob-webrtc-3.2.2.tgz#03e46093cb0ce4168bddf23e61069ed6bfe221af"
+  integrity sha512-uScTb2kLKH3pST/eDpjuSFGL+EYpEnogWaRw7Tsyl7b+kEQQZ2xtleIoIunCCZqSCattPBnZ1evDY+7J/wiYfw==
+
+easemob-websdk@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.2.2.tgz#c699816e3e122e3cb8c56bfd76c26f7762fc3bcc"
+  integrity sha512-S2+/ISgj2hrQDW88HcDqsjUdQrdvMi+xcxblceinmQxQve+mAlJnn5j/eyCwXIxGPB1eZXU3oFHTjzearPbRcQ==
+
 easy-stack@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/easy-stack/-/easy-stack-1.0.0.tgz#12c91b3085a37f0baa336e9486eac4bf94e3e788"
@@ -8600,6 +8610,11 @@ vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
+
+vuescroll@^4.16.1:
+  version "4.16.1"
+  resolved "https://registry.yarnpkg.com/vuescroll/-/vuescroll-4.16.1.tgz#498099fd0e0a47bf09e1d0cb91fc3533a6804e58"
+  integrity sha512-7fRsG2Yw5Z07LUz/IIu9barpmYiN9q+ZTC+CrVamvCbmsxyhz8mU1OuYFbfORysaUskioNMxTGDo+HOzeDfSyQ==
 
 vuex@^3.4.0:
   version "3.5.1"

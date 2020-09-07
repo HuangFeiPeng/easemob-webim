@@ -1,0 +1,116 @@
+.login_bg {
+    position: relative;
+    padding: 60px;
+    height: 100%;
+    text-align: center;
+    h1 {
+      color: #104fad;
+      font-weight: 700;
+      text-shadow: 1px 0px 3px rgb(70, 68, 68);
+    }
+    h6 {
+      text-align: right;
+      font-weight: bold;
+    }
+    .bg-image {
+      position: absolute;
+      left: 50px;
+      top:  185px;
+      margin-left: 20px;
+      width: 800px;
+      height: 600px;
+      background-size: 100% 100%;
+      background-image: url("../../assets/image/link.png");
+      z-index: -1;
+    }
+    .login-box {
+        position: absolute;
+        right: 80px;
+        top: 200px;
+        width: 600px;
+        height: 500px;
+        background: rgba(240, 234, 234, 0.459);
+        border-radius: 25px;
+        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.178);
+        .login-title {
+            width: 100%;
+            height: 100px;
+            line-height: 100px;
+            margin-top: 10px;
+            display: inline-block;
+            font-size: 35px;
+    
+        }
+        .changeTitle{
+            font-weight: 200;
+            margin-left: 70px;
+            text-align: left;
+        }
+        .bottom-line {
+            display: inline-block;
+            width: 80%;
+            height: 1px;
+            background: #659bf3;
+            // background: #FFF;
+            box-sizing: border-box;
+        }
+    
+        .login—input {
+            margin: 50px 0;
+            height: 80px;
+            line-height: 80px;
+            margin-bottom: 0;
+    
+            label {
+                font-size: 20px;
+                color: #fff;
+                font-weight: 700;
+            }
+    
+            input {
+                padding: 0 20px;
+                width: 80%;
+                height: 50px;
+                font-size: 20px;
+                background: transparent;
+                border-radius: 5px;
+                border: 1px solid #fff;
+                transition: all 0.3s;
+                &:hover{
+                    border: 2px solid #659bf3;
+                }
+            }
+        }
+    
+        .login-btn {
+            font-size: 20px;
+            width: 80%;
+            height: 50px;
+            cursor: pointer;
+        }
+    
+        .changBtn {
+            height: 25px;
+    
+            p {
+                line-height: 25px;
+                font-size: 10px;
+                span:last-child{
+                    padding: 3px;
+                    transition: all 0.5s;
+                    color: firebrick;
+                    cursor: pointer;
+                    &:hover{
+                        color: rgb(34, 76, 139);
+                        font-weight: 700;
+                        
+                    }
+                }
+            }
+    
+        }
+    
+        /* 注册状态时时改变样式 */
+    
+    }
+  }
