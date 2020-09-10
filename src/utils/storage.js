@@ -7,7 +7,10 @@ var storage = {
     },
     getstorage: function(key){
         return JSON.parse(window.localStorage.getItem(key));
-    } 
+    } ,
+    clearstorage: function(key){
+        return window.localStorage.removeItem(key);
+    }
 }
 
 export default storage;
