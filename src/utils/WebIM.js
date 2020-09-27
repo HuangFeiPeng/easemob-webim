@@ -35,7 +35,9 @@ conn.listen({
     console.log('>>>>环信断开连接');
     window.Vue.$router.push('/login').catch(err => (err))
   }, //连接关闭回调
-  onTextMessage: function () {}, //收到文本消息
+  onTextMessage: function (msg) {
+    console.log(msg);
+  }, //收到文本消息
   onEmojiMessage: function () {}, //收到表情消息
   onPictureMessage: function () {}, //收到图片消息
   onCmdMessage: function () {}, //收到命令消息

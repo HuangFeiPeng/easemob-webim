@@ -10,6 +10,7 @@
             class="chat-list_content"
             v-for="(item, index) in groupList"
             :key="index"
+            @click="goStart(index)"
           >
             <span class="iconfont icon-haoyou"> </span>
             <div class="chat-list_main">
@@ -23,24 +24,27 @@
   </transition>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import Ops from "@/utils/scrollConfig";
 export default {
   data() {
     return {
-      groupList: [],
       ops: Ops,
     };
   },
   created() {
-    let that = this;
-    this.$conn.getGroup({
-      success: function (res) {
-        let data = res.data;
-        for (let a = 0; a < data.length; a++) {
-          that.groupList.push(data[a]);
-        }
-      },
-    });
+    this.$store.dispatch('getGroupsList');
+  },
+  computed:{
+    ...mapGetters({groupList:'onGetGroupList'})
+  },
+  methods: {
+    goStart(idx){
+      console.log(this.groupList);
+      this.$router.push({name:"Group/id",params:{ id: this.groupList[idx].groupid}}).catch(err => {
+        err
+      });
+    }
   },
 };
 </script>

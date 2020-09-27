@@ -23,30 +23,19 @@
   </transition>
 </template>
 <script>
-import Ops from "@/utils/scrollConfig";
+import { mapGetters } from "vuex"
+import Ops from "@/utils/scrollConfig"
 export default {
   data() {
     return {
-      chatroom: [],
-      ops: Ops,
-    };
+      ops: Ops
+    }
   },
   created() {
-    let that = this;
-    this.$conn.getChatRooms({
-      apiUrl: this.$WebIM.config.restServer,
-      pagenum: 1, // 页数
-      pagesize: 20, // 每页个数
-      success: function (list) {
-        let data = list.data;
-        for (let a = 0; a < data.length; a++) {
-          that.chatroom.push(data[a]);
-        }
-      },
-      error: function () {
-        console.log("List chat room error");
-      },
-    });
+    this.$store.dispatch("getChatroomsList")
   },
-};
+  computed: {
+    ...mapGetters({ chatroom: "onGetChatRoomsList" })
+  }
+}
 </script>

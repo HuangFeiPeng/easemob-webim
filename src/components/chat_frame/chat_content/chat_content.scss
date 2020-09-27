@@ -1,0 +1,37 @@
+#chat-msg{
+    position: absolute;
+    left: 400px;
+    top: 0;
+    width: 800px;
+    height: 100%;
+    border-radius: 0 10px 10px 0;
+    border-left: 5px solid rgba(204, 204, 204, 0.966);
+    background: #C6D7EA;
+    .chat_msg_body{
+        height: 630px;
+        background: rgba(0, 0, 0, 0.226);
+        padding: 10px;
+        .chat_msg_box{
+            margin: 20px 0;
+            .msg_from{
+                display: inline-block;
+                font-size: 16px;
+            }
+            .msg_content{
+                max-width: 500px;
+                text-indent: 2em;
+                padding: 10px;
+                background: #CCC;
+                border-radius: 5px;
+                p{
+                    font-size: 12px;
+                }
+            }
+            .msg_time{
+                font-size: 10px;
+                font-weight: 200;
+            }
+
+        }
+    }
+}

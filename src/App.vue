@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-export default {};
+export default {}
 </script>
 <style lang="scss">
 @import url("./assets/_reset.scss");
@@ -20,6 +20,5 @@ export default {};
     height: 10px;
     background: linear-gradient(90deg, #6510ad 30%, #104fad);
   }
-  
 }
 </style>

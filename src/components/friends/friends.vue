@@ -11,6 +11,7 @@
             v-for="(item, index) in friendList"
             :key="index"
             v-show="true"
+            @click="goStart(index)"
           >
             <span class="iconfont icon-yonghu"></span>
             <p :title="item.subscription">{{ item.name }}</p>
@@ -21,27 +22,29 @@
   </transition>
 </template>
 <script>
-import Ops from '@/utils/scrollConfig';
-console.log('>>>>',Ops);
-import "./friends.scss";
+import { mapGetters } from "vuex"
+import Ops from "@/utils/scrollConfig"
+console.log(">>>>", Ops)
 export default {
   data() {
     return {
-      friendList: [],
-      isShow: true,
       ops: Ops //滚动配置
-    };
+    }
   },
-  async created() {
-    let that = this;
-    await this.$conn.getRoster({
-      success: function (roster) {
-        console.log(roster);
-        for (let i = 0; i < roster.length; i++) {
-          that.friendList.push(roster[i]);
-        }
-      },
-    });
+  created() {
+    this.$store.dispatch('getFriendsList');
   },
-};
+  computed: {
+    ...mapGetters({friendList:'onGetFriendsList'})
+  },
+  methods: {
+    goStart(idx) {
+      this.$router
+        .push({ name: "Friends/id", params: { id: this.friendList[idx].name } })
+        .catch(err => {
+          err
+        })
+    }
+  }
+}
 </script>

@@ -1,30 +1,41 @@
 <template>
   <div class="chat-body">
-    <Tabbar />
+    <Tabbar/>
+    <router-view></router-view>
+    <ChatContent v-if="isShow"/>
+    
   </div>
 </template>
 <script>
-import "./chat.scss";
-import Tabbar from '@/components/tabbar/tabbar';
-import Storage from '../../utils/storage';
+import "./chat.scss"
+//tab切换部分的组件
+import Tabbar from "@/components/tabbar/tabbar"
+//聊天框部分组件
+import ChatContent from "@/components/chat_frame/chat_content/chat_content"
+//本地存储方法
+import Storage from "../../utils/storage"
 export default {
   data() {
     return {
-      userInfo: {}
+      userInfo: {},
+      isShow: false,
+      data: {}
     }
   },
   created() {
-      this.userInfo = Storage.getstorage('userInfo');
-      this.$conn.open({
-        apiUrl: this.$WebIM.config.apiURL,
-        user: this.userInfo.username,
-        accessToken: this.userInfo.token,
-        appKey: this.$WebIM.config.appkey
-      })
+    //执行刷新聊天页面取token重新登陆。
+    this.userInfo = Storage.getstorage("userInfo")
+    this.$conn.open({
+      apiUrl: this.$WebIM.config.apiURL,
+      user: this.userInfo.username,
+      accessToken: this.userInfo.token,
+      appKey: this.$WebIM.config.appkey
+    })
   },
-  components:{
-    Tabbar
+
+  components: {
+    Tabbar,
+    ChatContent
   }
 }
 </script>
-

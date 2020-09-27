@@ -22,22 +22,45 @@ const routes = [{
       title: '开始畅聊'
     },
     component: () => import("@/views/chat/chat"),
-    children: [{
+    children: [
+      {
         path: "friends",
+        name: "Friends",
         meta: {
           title: '好友'
         },
-        component: () => import('@/components/friends/friends')
+        component: () => import('@/components/friends/friends'),
+        children:[
+          {
+            path: ":id",
+            name: "Friends/id",
+            meta: {
+              title: '好友'
+            },
+            component: () => import('@/components/chat_frame/chat_content/chat_content')
+          }
+        ]
       },
+      
       {
         path: "group",
+        name:"Group",
         meta: {
           title: '群组'
         },
         component: () => import("@/components/group/group")
       },
       {
+        path: "/group/:id",
+        name: "Group",
+        meta: {
+          title: '好友'
+        },
+        component: () => import('@/components/chat_frame/chat_content/chat_content')
+      },
+      {
         path: "chatroom",
+        name:"Chatroom",
         meta: {
           title: '聊天室'
         },
