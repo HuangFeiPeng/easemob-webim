@@ -1,6 +1,6 @@
 <template>
   <div id="chat-msg" >
-    <ChatHeader :name="id"></ChatHeader>
+    <ChatHeader></ChatHeader>
     <div class="chat_msg_body">
       <vue-scroll :ops="ops">
         <!-- 每一个聊天气泡 -->
@@ -61,10 +61,8 @@ export default {
     return {
       ops: Ops,
       show: false,
-      id: this.$route.params.id //将ID传给header组件。
+      // id: this.$store.state.chatStore.userName  //将ID传给header组件。
     }
-  },
-  props: {
   },
   components: {
     ChatHeader

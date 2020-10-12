@@ -1,15 +1,15 @@
 <template>
   <div class="chat-body">
-    <Tabbar/>
+    <Tabbar />
     <router-view></router-view>
-    <ChatContent v-if="isShow"/>
-    
+    <ChatContent />
   </div>
 </template>
 <script>
 import "./chat.scss"
 //tab切换部分的组件
 import Tabbar from "@/components/tabbar/tabbar"
+
 //聊天框部分组件
 import ChatContent from "@/components/chat_frame/chat_content/chat_content"
 //本地存储方法
@@ -18,7 +18,6 @@ export default {
   data() {
     return {
       userInfo: {},
-      isShow: false,
       data: {}
     }
   },

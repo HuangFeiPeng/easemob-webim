@@ -6,6 +6,11 @@ const chatStore = {
             friendsList: [],
             groupsList: [],
             chatroomsList: []
+        },
+        //userID包含个人ID 群组ID 以及聊天室ID userName包含的只有群组name 以及 聊天室name
+        userInfo: {
+            userId: "",
+            userName: ""
         }
     },
     mutations: {
@@ -15,6 +20,13 @@ const chatStore = {
                 type
             } = playload;
             state.aboutList[type] = data;
+        },
+        chatName: (state, playload) =>{
+            const { chatID, chatName} = playload
+            console.log(chatID);
+            state.userInfo.userId = chatID
+            state.userInfo.userName = chatName
+
         }
     },
     actions: {
@@ -59,6 +71,10 @@ const chatStore = {
                     console.log("List chat room error");
                 },
             })
+        },
+        //点击列表把对应的name ID存入
+        getUserName: (context, strep) =>{
+            context.commit('chatName',strep)
         }
     },
     getters: {

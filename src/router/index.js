@@ -22,45 +22,50 @@ const routes = [{
       title: '开始畅聊'
     },
     component: () => import("@/views/chat/chat"),
-    children: [
-      {
+    children: [{
         path: "friends",
         name: "Friends",
         meta: {
           title: '好友'
         },
         component: () => import('@/components/friends/friends'),
-        children:[
-          {
-            path: ":id",
-            name: "Friends/id",
-            meta: {
-              title: '好友'
-            },
-            component: () => import('@/components/chat_frame/chat_content/chat_content')
-          }
-        ]
+
       },
-      
+      {
+        path: "friends/:id",
+        name: "Friends/id",
+        meta: {
+          title: '好友'
+        },
+        component: () => import('@/components/friends/friends')
+      },
       {
         path: "group",
-        name:"Group",
+        name: "Group",
         meta: {
           title: '群组'
         },
         component: () => import("@/components/group/group")
       },
       {
-        path: "/group/:id",
-        name: "Group",
+        path: "group/:id",
+        name: "Group/id",
         meta: {
-          title: '好友'
+          title: '群聊天'
         },
-        component: () => import('@/components/chat_frame/chat_content/chat_content')
+        component: () => import('@/components/group/group')
       },
       {
         path: "chatroom",
-        name:"Chatroom",
+        name: "Chatroom",
+        meta: {
+          title: '聊天室'
+        },
+        component: () => import("@/components/chatroom/chatroom")
+      },
+      {
+        path: "chatroom/:id",
+        name: "Chatroom/id",
         meta: {
           title: '聊天室'
         },
@@ -91,7 +96,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
     next();
     /* 判断的逻辑：如果localstorage没有userInfo字段，并且 to.path 不是login 那么就重定向到登陆。 */
-    if(!localStorage.getItem("userInfo") && to.path !== "/login"){
+    if (!localStorage.getItem("userInfo") && to.path !== "/login") {
       next("/login");
     }
   }

@@ -8,8 +8,9 @@
         <vue-scroll :ops="ops">
           <div
             class="chat-list_content"
-            v-for="(item, index) in chatroom"
+            v-for="(item, index) in chatRoom"
             :key="index"
+            @click="goStart(index)"
           >
             <span class="iconfont icon-qunzuduoren"></span>
             <div class="chat-list_main">
@@ -35,7 +36,16 @@ export default {
     this.$store.dispatch("getChatroomsList")
   },
   computed: {
-    ...mapGetters({ chatroom: "onGetChatRoomsList" })
+    ...mapGetters({ chatRoom: "onGetChatRoomsList" })
+  },
+  methods: {
+    goStart(idx) {
+      const chatID = this.chatRoom[idx].id
+      const chatName = this.chatRoom[idx].name
+      // console.log(this.chatRoom[idx]);
+      this.$store.dispatch("getUserName", { chatID, chatName })
+
+    }
   }
 }
 </script>

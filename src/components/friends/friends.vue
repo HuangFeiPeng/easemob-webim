@@ -39,11 +39,16 @@ export default {
   },
   methods: {
     goStart(idx) {
-      this.$router
-        .push({ name: "Friends/id", params: { id: this.friendList[idx].name } })
-        .catch(err => {
-          err
-        })
+      const chatID = this.friendList[idx].name;
+      console.log(this.friendList[idx].name);
+      this.$store.dispatch('getUserName',{chatID})
+      // console.log(idx);
+      
+    //   this.$router
+    //     .push({ name: "Friends/id", params: { id: this.friendList[idx].name } })
+    //     .catch(err => {
+    //       err
+    //     })
     }
   }
 }
