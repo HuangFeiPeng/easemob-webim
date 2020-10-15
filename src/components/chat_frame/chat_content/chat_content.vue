@@ -49,23 +49,26 @@
           <span class="msg_time">12:08</span>
         </div>
       </vue-scroll>
+      <ChatSendBox></ChatSendBox>
     </div>
+    
   </div>
 </template>
 <script>
 import "./chat_content.scss"
 import Ops from "@/utils/scrollConfig"
 import ChatHeader from "@/components/chat_frame/chat_header/chat_header"
+import ChatSendBox from '@/components/chat_frame/chat_sendBox/chat_sendBox';
 export default {
   data() {
     return {
       ops: Ops,
       show: false,
-      // id: this.$store.state.chatStore.userName  //将ID传给header组件。
     }
   },
   components: {
-    ChatHeader
+    ChatHeader,
+    ChatSendBox
   }
 }
 </script>

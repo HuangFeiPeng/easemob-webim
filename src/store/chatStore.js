@@ -2,6 +2,7 @@ import WebIM from '@/utils/WebIM.js'
 console.log('>>>>store', WebIM);
 const chatStore = {
     state: {
+        //列表分类
         aboutList: {
             friendsList: [],
             groupsList: [],
@@ -14,6 +15,7 @@ const chatStore = {
         }
     },
     mutations: {
+        //加载列表
         loadList: function (state, playload) {
             const {
                 data,
@@ -23,10 +25,8 @@ const chatStore = {
         },
         chatName: (state, playload) =>{
             const { chatID, chatName} = playload
-            console.log(chatID);
             state.userInfo.userId = chatID
             state.userInfo.userName = chatName
-
         }
     },
     actions: {
@@ -46,7 +46,6 @@ const chatStore = {
             WebIM.conn.getGroup({
                 success: (roster) => {
                     let data = roster.data;
-                    console.log('store>>>>群组', roster);
                     context.commit('loadList', {
                         type: 'groupsList',
                         data: data

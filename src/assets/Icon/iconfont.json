@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "122304",
+      "name": "表情",
+      "font_class": "biaoqing",
+      "unicode": "f0154",
+      "unicode_decimal": 983380
+    },
+    {
       "icon_id": "139829",
       "name": "群组多人",
       "font_class": "qunzuduoren",
@@ -18,6 +25,34 @@
       "font_class": "haoyou",
       "unicode": "e783",
       "unicode_decimal": 59267
+    },
+    {
+      "icon_id": "1305401",
+      "name": "历史",
+      "font_class": "lishi",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "2668404",
+      "name": "图库",
+      "font_class": "tuku",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "2672193",
+      "name": "语音",
+      "font_class": "yuyin",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "4294060",
+      "name": "文件",
+      "font_class": "wenjian",
+      "unicode": "e780",
+      "unicode_decimal": 59264
     },
     {
       "icon_id": "4409271",

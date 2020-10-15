@@ -42,11 +42,7 @@ export default {
     goStart(idx){
       const chatID = this.groupList[idx].groupid;
       const chatName = this.groupList[idx].groupname;
-      console.log(chatName);
       this.$store.dispatch('getUserName',{chatID,chatName})
-      // this.$router.push({name:"Group/id",params:{ id: this.groupList[idx].groupid}}).catch(err => {
-      //   err
-      // });
     }
   },
 };

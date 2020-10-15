@@ -32,7 +32,6 @@
           </div>
         </router-link>
       </keep-alive>
-
       <router-link to="/chat/setting">
         <div class="tabList" id="setting-tab">
           <span class="iconfont icon-ziyuan156"></span></div
