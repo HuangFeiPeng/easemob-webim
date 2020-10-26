@@ -42,7 +42,8 @@ export default {
     goStart(idx){
       const chatID = this.groupList[idx].groupid;
       const chatName = this.groupList[idx].groupname;
-      this.$store.dispatch('getUserName',{chatID,chatName})
+      const type = 1
+      this.$store.dispatch('getUserName',{chatID,chatName,type})
     }
   },
 };

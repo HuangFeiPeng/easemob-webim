@@ -28,19 +28,22 @@ console.log(">>>>", Ops)
 export default {
   data() {
     return {
-      ops: Ops //滚动配置
+      ops: Ops, //滚动配置,
+      msgType: 0
     }
   },
   created() {
     this.$store.dispatch('getFriendsList');
   },
-  computed: {
-    ...mapGetters({friendList:'onGetFriendsList'})
-  },
+  computed: mapGetters({
+    friendList:'onGetFriendsList'
+  }),
   methods: {
     goStart(idx) {
       const chatID = this.friendList[idx].name;
-      this.$store.dispatch('getUserName',{chatID})
+      const type = 0
+      this.$store.dispatch('getUserName',{chatID,type})
+      
     }
   }
 }

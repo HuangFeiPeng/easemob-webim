@@ -11,8 +11,14 @@ const chatStore = {
         //userID包含个人ID 群组ID 以及聊天室ID userName包含的只有群组name 以及 聊天室name
         userInfo: {
             userId: "",
-            userName: ""
-        }
+            userName: "",
+            type: ""
+        },
+        msgType: {
+            0: "singleChat",
+            1: "groupChat",
+            2: "chatRoom"
+        },
     },
     mutations: {
         //加载列表
@@ -23,10 +29,15 @@ const chatStore = {
             } = playload;
             state.aboutList[type] = data;
         },
-        chatName: (state, playload) =>{
-            const { chatID, chatName} = playload
+        chatName: (state, playload) => {
+            const {
+                chatID,
+                chatName,
+                type
+            } = playload
             state.userInfo.userId = chatID
             state.userInfo.userName = chatName
+            state.userInfo.type = state.msgType[type]
         }
     },
     actions: {
@@ -72,18 +83,18 @@ const chatStore = {
             })
         },
         //点击列表把对应的name ID存入
-        getUserName: (context, strep) =>{
-            context.commit('chatName',strep)
+        getUserName: (context, strep) => {
+            context.commit('chatName', strep)
         }
     },
     getters: {
         onGetFriendsList: (state) => {
             return state.aboutList.friendsList;
         },
-        onGetGroupList: (state)=>{
+        onGetGroupList: (state) => {
             return state.aboutList.groupsList;
         },
-        onGetChatRoomsList: (state)=>{
+        onGetChatRoomsList: (state) => {
             return state.aboutList.chatroomsList;
         }
     }
