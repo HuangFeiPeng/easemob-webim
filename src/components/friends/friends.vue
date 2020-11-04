@@ -33,17 +33,16 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('getFriendsList');
+      this.$store.dispatch("getFriendsList")
   },
   computed: mapGetters({
-    friendList:'onGetFriendsList'
+    friendList: "onGetFriendsList"
   }),
   methods: {
     goStart(idx) {
-      const chatID = this.friendList[idx].name;
+      const chatID = this.friendList[idx].name
       const type = 0
-      this.$store.dispatch('getUserName',{chatID,type})
-      
+      this.$store.dispatch("getUserName", { chatID, type })
     }
   }
 }

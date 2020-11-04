@@ -3330,10 +3330,10 @@ easemob-webrtc@^3.2.2:
   resolved "https://registry.yarnpkg.com/easemob-webrtc/-/easemob-webrtc-3.2.2.tgz#03e46093cb0ce4168bddf23e61069ed6bfe221af"
   integrity sha512-uScTb2kLKH3pST/eDpjuSFGL+EYpEnogWaRw7Tsyl7b+kEQQZ2xtleIoIunCCZqSCattPBnZ1evDY+7J/wiYfw==
 
-easemob-websdk@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.2.2.tgz#c699816e3e122e3cb8c56bfd76c26f7762fc3bcc"
-  integrity sha512-S2+/ISgj2hrQDW88HcDqsjUdQrdvMi+xcxblceinmQxQve+mAlJnn5j/eyCwXIxGPB1eZXU3oFHTjzearPbRcQ==
+easemob-websdk@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.3.2.tgz#4d75a45c47ecc90256969d9329de7c00db48f7a5"
+  integrity sha512-3T7NlQwcpkfFX+pF/h2LSS0JTlsRJDSLwVIV71rKCAaff0QwRSXT2O8vv84hLCcTK/VDlM5Uj/Cvta78Rm0MSQ==
 
 easy-stack@^1.0.0:
   version "1.0.0"

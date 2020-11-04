@@ -24,27 +24,27 @@
   </transition>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import Ops from "@/utils/scrollConfig";
+import { mapGetters } from "vuex"
+import Ops from "@/utils/scrollConfig"
 export default {
   data() {
     return {
-      ops: Ops,
-    };
-  },
-  created() {
-    this.$store.dispatch('getGroupsList');
-  },
-  computed:{
-    ...mapGetters({groupList:'onGetGroupList'})
-  },
-  methods: {
-    goStart(idx){
-      const chatID = this.groupList[idx].groupid;
-      const chatName = this.groupList[idx].groupname;
-      const type = 1
-      this.$store.dispatch('getUserName',{chatID,chatName,type})
+      ops: Ops
     }
   },
-};
+  created() {
+      this.$store.dispatch("getGroupsList")
+  },
+  computed: {
+    ...mapGetters({ groupList: "onGetGroupList" })
+  },
+  methods: {
+    goStart(idx) {
+      const chatID = this.groupList[idx].groupid
+      const chatName = this.groupList[idx].groupname
+      const type = 1
+      this.$store.dispatch("getUserName", { chatID, chatName, type })
+    }
+  }
+}
 </script>

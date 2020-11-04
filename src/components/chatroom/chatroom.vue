@@ -33,18 +33,19 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getChatroomsList")
+      this.$store.dispatch("getChatroomsList")
   },
   computed: {
     ...mapGetters({ chatRoom: "onGetChatRoomsList" })
   },
   methods: {
-    goStart(idx) {
+    async goStart(idx) {
       const chatID = this.chatRoom[idx].id
       const chatName = this.chatRoom[idx].name
+      const type = 2
       // console.log(this.chatRoom[idx]);
-      this.$store.dispatch("getUserName", { chatID, chatName })
-
+      await this.$store.dispatch("joinChatroom", { chatID })
+      await this.$store.dispatch("getUserName", { chatID, chatName, type })
     }
   }
 }

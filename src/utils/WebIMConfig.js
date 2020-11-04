@@ -36,6 +36,7 @@ var config = {
 
   restServer: getUrl().apiUrl, // rest Server地址
 
+  // appkey: "1110201022157933#demo", // App key
   appkey: "easemob-demo#chatdemoui", // App key
 
   https: false, // 是否使用https
@@ -52,7 +53,7 @@ var config = {
 
   delivery: false, // 是否发送已读回执
 
-  useOwnUploadFun: false // 是否使用自己的上传方式（如将图片文件等上传到自己的服务器，构建消息时只传url）
+  useOwnUploadFun: true // 是否使用自己的上传方式（如将图片文件等上传到自己的服务器，构建消息时只传url）
 };
 
 export default config;

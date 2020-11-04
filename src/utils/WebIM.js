@@ -1,6 +1,50 @@
 import websdk from "easemob-websdk";
 import config from "./WebIMConfig";
 import getNowTime from "./getTime";
+import someFun from "./function";
+
+console.log(someFun.otherMsg);
+// import Vue from "vue";
+//封装来自他人的消息体
+// function otherMsg(message) {
+//   let Type = {
+//     chat: 'singleChat',
+//     groupchat: 'groupChat',
+//     chatroom: 'chatRoom'
+//   }
+//   let serverMsgId = message.id;
+//   let chatType = Type[message.type];
+//   console.log('>>>>传入的消息', message);
+//   const otherMessage = {
+//     contentsType: message.contentsType,
+//     msgData: message.data,
+//     ext: message.ext,
+//     from: message.from,
+//     to: message.to,
+//     time: message.time,
+//     // status: null,
+//     source: 'other'
+//   }
+//   console.log('>>>>接收的othermessage', otherMessage);
+//   window.Vue.$store.commit('addNewMessage', {
+//     data: {
+//       otherMessage,
+//       serverMsgId
+//     },
+//     chatType
+//   })
+// }
+// console.log(otherMessage);
+// const otherMsg = {
+//   contentsType: step.type,
+//   msgData: step.msg,
+//   ext: {},
+//   from: conn.user,
+//   to: step.to,
+//   time: new Date().getTime(),
+//   // status: null,
+//   source: 'self'
+// }
 var conn = {};
 var WebIM = {};
 WebIM = websdk;
@@ -30,13 +74,32 @@ conn.listen({
         err
       });
     }
+
+
   }, //连接成功回调
   onClosed: function () {
     console.log('>>>>环信断开连接');
     window.Vue.$router.push('/login').catch(err => (err))
   }, //连接关闭回调
+  onContactInvited: function (msg) {
+    console.log('收到好友邀请', msg);
+  }, // 收到好友邀请
+  onContactDeleted: function (msg) {
+    console.log('收到被删除', msg);
+  }, // 被删除时回调此方法
+  onContactAdded: function (msg) {
+    console.log('收到添加联系人', msg);
+  }, // 增加了联系人时回调此方法
+  onContactRefuse: function (msg) {
+    console.log('收到好友请求被拒绝', msg);
+  }, // 好友请求被拒绝
+  onContactAgreed: function (msg) {
+    console.log('>>>好友请求被同意', msg);
+  }, // 好友请求被同意
   onTextMessage: function (msg) {
     console.log(msg);
+    someFun.otherMsg(msg)
+    // someFun(msg)
   }, //收到文本消息
   onEmojiMessage: function () {}, //收到表情消息
   onPictureMessage: function () {}, //收到图片消息
@@ -44,6 +107,9 @@ conn.listen({
   onAudioMessage: function () {}, //收到音频消息
   onLocationMessage: function () {}, //收到位置消息
   onFileMessage: function () {}, //收到文件消息
+  onCustomMessage: function (message) {
+    console.log('收到自定义消息', message);
+  }, //收到自定义消息
   onVideoMessage: function (message) {
     var node = document.getElementById('privateVideo');
     var option = {

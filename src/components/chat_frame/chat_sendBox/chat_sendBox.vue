@@ -63,7 +63,8 @@ export default {
       await this.sendTextMsg({
         msg: msgVal,
         to: this.toID,
-        type: this.msgType
+        type: this.msgType,
+        contentsType: "Text"
       })
       document.getElementById("send_msg").innerHTML = ""
     }

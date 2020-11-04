@@ -10,4 +10,6 @@ function getNowdate() {
   return `${Y}-${M}-${D}-${H}:${F}:${S}`;
 }
 
+//时间戳转换
+
 export default getNowdate;

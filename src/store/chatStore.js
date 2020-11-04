@@ -85,6 +85,17 @@ const chatStore = {
         //点击列表把对应的name ID存入
         getUserName: (context, strep) => {
             context.commit('chatName', strep)
+        },
+        //调用加入聊天室
+        joinChatroom: (context,step)=>{
+            console.log(step);
+            let options = {
+                roomId: step.chatID,   // 聊天室id
+                // message: 'reason'   // 原因（可选参数）
+            }
+            WebIM.conn.joinChatRoom(options).then((res) => {
+                console.log('>>>>加入成功',res)
+            })
         }
     },
     getters: {
