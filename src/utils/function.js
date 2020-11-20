@@ -1,3 +1,4 @@
+
 let someFun = {
     //处理将接受到的消息存入。
     otherMsg(message) {

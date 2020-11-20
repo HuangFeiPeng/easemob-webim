@@ -43,6 +43,7 @@ export default {
       const chatID = this.friendList[idx].name
       const type = 0
       this.$store.dispatch("getUserName", { chatID, type })
+
     }
   }
 }

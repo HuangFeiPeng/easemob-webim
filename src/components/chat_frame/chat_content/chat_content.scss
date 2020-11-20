@@ -1,4 +1,4 @@
-#chat-msg{
+#chat-msg {
     position: relative;
     left: 400px;
     top: 0;
@@ -6,30 +6,67 @@
     height: 100%;
     border-radius: 0 10px 10px 0;
     border-left: 5px solid rgba(204, 204, 204, 0.966);
-    background: #C6D7EA;
-    .chat_msg_body{
-        height: 530px;
-        background: rgba(0, 0, 0, 0.226);
+    background: #c6d7ea;
+
+    .chat_msg_body {
+        height: 450px;
+        background: rgba(252, 252, 252,1);
         padding: 10px;
-        .chat_msg_box{
-            margin: 20px 0;
-            .msg_from{
-                display: inline-block;
+
+        //对方消息样式
+        .chat_msg_box_left {
+            margin: 5px 0;
+
+            .msg_from {
+                // display: inline-block;
                 font-size: 16px;
             }
-            .msg_content{
-                max-width: 500px;
-                text-indent: 2em;
-                padding: 10px;
-                background: #CCC;
-                border-radius: 5px;
-                p{
+
+            .msg_content {
+                min-width: 391px;
+
+                p {
+                    display: inline-block;
+                    text-indent: 1em;
+                    padding: 10px;
+                    background: rgb(247, 242, 242);
+                    border-radius: 0 10px 10px 20px;
                     font-size: 12px;
                 }
+
+                .msg_time {
+                    font-size: 10px;
+                    font-weight: 200;
+                }
             }
-            .msg_time{
-                font-size: 10px;
-                font-weight: 200;
+
+
+        }
+
+        //我方消息样式
+        .chat_msg_box_right {
+            margin-right: 10px;
+            .msg_from {
+                text-align: right;
+                font-size: 16px;
+            }
+            .msg_content {
+                min-width: 391px;
+                text-align: right;
+
+                p {
+                    display: inline-block;
+                    text-indent: 1em;
+                    padding: 10px;
+                    background: rgb(209, 241, 254);
+                    border-radius: 10px 0 20px 10px;
+                    font-size: 16px;
+                }
+
+                .msg_time {
+                    font-size: 10px;
+                    font-weight: 200;
+                }
             }
 
         }

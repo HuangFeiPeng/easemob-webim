@@ -1,8 +1,7 @@
 import websdk from "easemob-websdk";
 import config from "./WebIMConfig";
-import getNowTime from "./getTime";
+// import getNowTime from "./getTime";
 import someFun from "./function";
-
 console.log(someFun.otherMsg);
 // import Vue from "vue";
 //封装来自他人的消息体
@@ -65,7 +64,7 @@ conn = WebIM.conn = new WebIM.connection({
 
 conn.listen({
   onOpened: function () {
-    console.log(">>>>与环信建立连接成功" + getNowTime());
+    console.log(">>>>与环信建立连接成功");
     //登陆成功之后的跳转
     if (window.location.pathname == "/chat") {
       return
@@ -107,8 +106,9 @@ conn.listen({
   onAudioMessage: function () {}, //收到音频消息
   onLocationMessage: function () {}, //收到位置消息
   onFileMessage: function () {}, //收到文件消息
-  onCustomMessage: function (message) {
-    console.log('收到自定义消息', message);
+  onCustomMessage: function (msg) {
+    console.log('收到自定义消息', msg);
+    someFun.otherMsg(msg)
   }, //收到自定义消息
   onVideoMessage: function (message) {
     var node = document.getElementById('privateVideo');
@@ -143,9 +143,11 @@ conn.listen({
   //     // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
   //     console.log(list);
   // },
-  // onRecallMessage: function (message) {}, //收到撤回消息回调
+  onRecallMessage: function (message) {
+    console.log('>>>>收到消息撤回的回调',message);
+  }, //收到撤回消息回调
   onReceivedMessage: function (message) {
-    console.log(">>>>消息送达服务器回执", message);
+    // console.log(">>>>消息送达服务器回执", message);
   }, //收到消息送达服务器回执
   // onDeliveredMessage: function (message) {}, //收到消息送达客户端回执
   onReadMessage: function (message) {

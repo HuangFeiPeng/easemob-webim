@@ -2,20 +2,11 @@
   <div class="chat_sendBox">
     <!-- 功能栏 -->
     <ul class="fun_Btn">
-      <li>
-        <span class="iconfont icon-biaoqing"></span>
+      <li v-for="(item, index) in btnList" :key="index">
+        <span :class="item.class"></span>
       </li>
       <li>
-        <span class="iconfont icon-tuku"></span>
-      </li>
-      <li>
-        <span class="iconfont icon-wenjian"></span>
-      </li>
-      <li>
-        <span class="iconfont icon-yuyin"></span>
-      </li>
-      <li>
-        <span class="iconfont icon-lishi"></span>
+        <span class="sendCmd" @click="sendCmd">发送自定义消息</span>
       </li>
     </ul>
     <div class="send-content">
@@ -40,17 +31,19 @@ import "./chat_sendBox.scss"
 import Ops from "@/utils/scrollConfig"
 import { mapActions, mapState } from "vuex"
 export default {
+  props: ["btnList"],
   data() {
     return {
       ops: Ops
     }
   },
+
   computed: mapState({
     msgType: state => state.chatStore.userInfo.type,
     toID: state => state.chatStore.userInfo.userId
   }),
   methods: {
-    ...mapActions(["sendTextMsg"]),
+    ...mapActions(["sendTextMsg", "sendCustomMsg"]),
     //发送消息
     async sendMessage() {
       let msgVal = document.getElementById("send_msg").innerHTML
@@ -67,6 +60,18 @@ export default {
         contentsType: "Text"
       })
       document.getElementById("send_msg").innerHTML = ""
+      setTimeout(()=>{
+        this.$emit('int')
+      },300)
+      
+    },
+    sendCmd() {
+      // this.sendCustomMsg({
+      //   to: this.toID,
+      //   type: this.msgType,
+      //   contentsType: "Custom"
+      // })
+      console.log(this.btnList)
     }
   }
 }

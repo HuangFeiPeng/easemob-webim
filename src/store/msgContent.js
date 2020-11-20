@@ -18,8 +18,7 @@ function msgGroup(state, chatType, data) {
             r = content.from;
             content.right = false;
         }
-    }
-    else if(chatType === 'groupChat' || chatType === 'chatRoom') {
+    } else if (chatType === 'groupChat' || chatType === 'chatRoom') {
         if (myID == content.from) {
             l = content.from;
             r = content.to;
@@ -60,13 +59,13 @@ const msgContent = {
             } = payload;
             switch (chatType) {
                 case 'singleChat':
-                    state.msgList[chatType] = msgGroup(state.msgList[chatType],chatType, data);
+                    state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
                     break;
                 case 'groupChat':
-                    state.msgList[chatType] = msgGroup(state.msgList[chatType],chatType, data);
+                    state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
                     break;
                 case 'chatRoom':
-                    state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType,data);
+                    state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
                     break;
                 default:
                     break;
@@ -120,10 +119,51 @@ const msgContent = {
             // }
 
             conn.send(msg.body);
+        },
+        //发送一条自定义消息
+        sendCustomMsg: (context, step) => {
+            const msgContent = {
+                contentsType: step.contentsType,
+                chatType: step.type,
+                ext: {},
+                from: conn.user,
+                to: step.to,
+                time: new Date().getTime(),
+                right: false
+            }
+            var id = conn.getUniqueId(); // 生成本地消息id
+            var msg = new WebIM.message('custom', id); // 创建自定义消息
+            var customEvent = "confrInfo"; // 创建自定义事件
+            var customExts = {
+                "confrID":'1216464564564646',
+                "password": '123456'
+            }; // 消息内容，key/value 需要 string 类型
+            msg.set({
+                to: step.to, // 接收消息对象（用户id）
+                customEvent,
+                customExts,
+                chatType: step.type,
+                ext: {}, // 消息扩展
+                success: function (id, serverMsgId) {
+                    context.commit('addNewMessage', {
+                        data: {
+                            msgContent,
+                            serverMsgId
+                        },
+                        chatType: step.type
+                    })
+                },
+                fail: function (e) {
+                    console.log('>>>自定义消息发送失败',e);
+                }
+            });
+            conn.send(msg.body);
         }
     },
     getters: {
-
+       getMsgList:(state) =>{
+            return state.msgList
+       }
     }
 }
 

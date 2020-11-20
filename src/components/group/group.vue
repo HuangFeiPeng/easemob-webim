@@ -2,7 +2,7 @@
   <transition name="showList">
     <div class="chat-list">
       <h3 class="chat-list_title">
-        群组列表
+        {{title}}
       </h3>
       <div class="chat-list_parent">
         <vue-scroll :ops="ops">
@@ -29,6 +29,7 @@ import Ops from "@/utils/scrollConfig"
 export default {
   data() {
     return {
+      title:'群组列表',
       ops: Ops
     }
   },

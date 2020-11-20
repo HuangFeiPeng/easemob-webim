@@ -8,7 +8,7 @@ var scrollConfig = {
         scrollPanel: {
             scrollingX: false,
             scrollingY: true,
-            speed: 100,
+            speed: 500,
             easing: undefined,
             // verticalNativeBarPos: left,
             maxHeight: 800,

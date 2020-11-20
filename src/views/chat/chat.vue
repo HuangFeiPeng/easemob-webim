@@ -31,7 +31,7 @@ export default {
         accessToken: this.userInfo.token,
         appKey: this.$WebIM.config.appkey
       })
-    }, 1000)
+    }, 500)
   },
 
   components: {
