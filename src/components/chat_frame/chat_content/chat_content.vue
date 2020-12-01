@@ -12,7 +12,6 @@
           <div class="msg_from">{{ item.from }}</div>
           <div class="msg_content">
             <p>
-              <!-- {{ renderTxt(item.msgData) }} -->
               {{ item.msgData }}
             </p>
             <div class="msg_time">{{ changeTime(item.time) }}</div>
@@ -47,6 +46,7 @@ export default {
     }
   },
   created() {
+    this.changeTime = changeTime
     ;(this.msgList = this.$store.state.msgContent.msgList),
       (this.userInfo = this.$store.state.chatStore.userInfo)
   },
@@ -60,9 +60,9 @@ export default {
     userId(newVal, oldVal) {
       this.int()
     },
+    //监听当nowList更新时就触发滚动条置底
     nowList(newVal, oldVal) {
       this.moveScrollBar()
-      // console.log('触发nowList监听',newVal,oldVal);
     }
   },
   methods: {
@@ -71,7 +71,6 @@ export default {
       var arr = []
       if (this.$conn.user && this.userInfo.userId) {
         var key = `${this.$conn.user}-${this.userInfo.userId}`
-        console.log(key)
         var type = this.userInfo.type
         arr = this.msgList[type][key] || []
         this.moveScrollBar()
@@ -87,34 +86,9 @@ export default {
         1000,
         "easeInQuad"
       )
-    },
-    timeStamp() {
-      // console.log(1111111);
-      console.log(changeTime(1605854157987))
-    },
-    renderTxt(txt) {
-      let rnTxt = []
-      let match = null
-      const regex = /(\[.*?\])/g
-      let start = 0
-      let index = 0
-      while ((match = regex.exec(txt))) {
-        index = match.index
-        if (index > start) {
-          rnTxt.push(txt.substring(start, index))
-        }
-
-        rnTxt.push(match[1])
-        start = index + match[1].length
-      }
-      rnTxt.push(txt.substring(start, txt.length))
-
-      return rnTxt
     }
   },
-  mounted() {
-    this.changeTime = changeTime
-  },
+  mounted() {},
   components: {
     ChatHeader,
     ChatSendBox
