@@ -1,4 +1,4 @@
-//实时获取时间
+//实时获取时间&时间戳转换为时间
 function getNowdate(time) {
   var t = new Date(parseInt(time));
   var Y = t.getFullYear();
