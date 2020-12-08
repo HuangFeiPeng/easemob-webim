@@ -1,34 +1,75 @@
 let someFun = {
     //处理将接受到的消息存入。
-    otherMsg(message) {
+    otherMsg(msg) {
         let Type = {
             chat: 'singleChat',
             groupchat: 'groupChat',
             chatroom: 'chatRoom'
         }
-        let serverMsgId = message.id;
-        let chatType = Type[message.type];
-        console.log('>>>>传入的消息', message);
-        const msgContent = {
-            contentsType: message.contentsType,
-            chatType: chatType,
-            msgData: message.data,
-            ext: message.ext,
-            from: message.from,
-            to: message.to,
-            time: message.time,
-            right: false
-        }
-        console.log('>>>>接收的othermessage', msgContent);
-        window.Vue.$store.commit('addNewMessage', {
-            data: {
+        let serverMsgId = msg.id;
+        let chatType = Type[msg.type];
+        switch (msg.contentsType) {
+            case 'TEXT': {
+                const msgContent = {
+                    contentsType: msg.contentsType,
+                    chatType: chatType,
+                    msgData: msg.data,
+                    ext: msg.ext,
+                    from: msg.from,
+                    to: msg.to,
+                    time: msg.time,
+                    right: false
+                }
+                console.log('>>>>接收的othermessage', msgContent);
+                window.Vue.$store.commit('addNewMessage', {
+                    data: {
 
-                msgContent,
-                serverMsgId
-            },
-            chatType
-        })
+                        msgContent,
+                        serverMsgId
+                    },
+                    chatType
+                })
+                break;
+            }
+            case 'IMAGE': {
+                const msgContent = {
+                    contentsType: msg.contentsType,
+                    chatType: chatType,
+                    msgData: {
+                        fileLength: msg.file_length,
+                        fileType: msg.filetype,
+                        fileName: msg.filename,
+                        secret: msg.secret,
+                        imgUrl: msg.url,
+                        width: msg.width,
+                        height: msg.height,
+
+                    },
+                    ext: msg.ext,
+                    from: msg.from,
+                    to: msg.to,
+                    time: msg.time,
+                    right: false
+                }
+                window.Vue.$store.commit('addNewMessage', {
+                    data: {
+
+                        msgContent,
+                        serverMsgId
+                    },
+                    chatType
+                })
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        console.log('>>>>传入的消息', msg);
+
     },
+    //TO DO 暂时没用到过滤
     filterHTMLTag(msg) {
         msg.replace(/<\/?[^>]*>/g, ''); //去除HTML Tag
         msg = msg.replace(/[|]*\n/, '') //去除行尾空格

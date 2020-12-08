@@ -101,7 +101,11 @@ conn.listen({
     // someFun(msg)
   }, //收到文本消息
   onEmojiMessage: function () {}, //收到表情消息
-  onPictureMessage: function () {}, //收到图片消息
+  onPictureMessage: function (msg) {
+    console.log(msg);
+    someFun.otherMsg(msg)
+
+  }, //收到图片消息
   onCmdMessage: function () {}, //收到命令消息
   onAudioMessage: function () {}, //收到音频消息
   onLocationMessage: function () {}, //收到位置消息
