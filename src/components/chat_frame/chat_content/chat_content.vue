@@ -1,7 +1,8 @@
 <template>
   <div id="chat-msg">
     <ChatHeader></ChatHeader>
-    <div class="chat_msg_body">
+    <div class="chat_msg_body" @click.stop="show = false">
+      <!-- <div class="chat_msg_body"  @click.stop="aaa"> -->
       <vue-scroll :ops="ops" ref="vs">
         <!-- 每一个聊天气泡 -->
         <div
@@ -11,15 +12,24 @@
         >
           <div class="msg_from">{{ item.from }}</div>
           <div class="msg_content">
-            <p>
+            <p v-if="item.contentsType === 'TEXT'">
               {{ item.msgData }}
             </p>
+            <div class="img_Box" v-else-if="item.contentsType === 'IMAGE'">
+              <!-- hiugigigi -->
+              <img :src="item.msgData.imgUrl" alt="图片加载失败..." />
+            </div>
             <div class="msg_time">{{ changeTime(item.time) }}</div>
           </div>
         </div>
       </vue-scroll>
-      <ChatSendBox :btnList="btn_List" @int="int"></ChatSendBox>
     </div>
+    <ChatSendBox
+      :btnList="btn_List"
+      @int="int"
+      :emojiHide.sync="show"
+    ></ChatSendBox>
+    <!-- sync修饰符为语法糖：当一个子组件改变了一个 prop 的值时，这个变化也会同步到父组件中所绑定。 -->
   </div>
 </template>
 <script>
@@ -37,11 +47,11 @@ export default {
       userInfo: {},
       show: false,
       btn_List: [
-        { class: "iconfont icon-biaoqing" },
-        { class: "iconfont icon-tuku" },
-        { class: "iconfont icon-wenjian" },
-        { class: "iconfont icon-yuyin" },
-        { class: "iconfont icon-lishi" }
+        { class: "iconfont icon-biaoqing", title: "发送表情" },
+        { class: "iconfont icon-tuku", title: "发送图片" },
+        { class: "iconfont icon-wenjian", title: "发送文件" },
+        { class: "iconfont icon-yuyin", title: "发送语音" },
+        { class: "iconfont icon-lishi", title: "拉取历史" }
       ]
     }
   },
@@ -88,7 +98,6 @@ export default {
       )
     }
   },
-  mounted() {},
   components: {
     ChatHeader,
     ChatSendBox
