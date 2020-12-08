@@ -401,7 +401,7 @@ export default {
   bottom: 195px;
   width: 500px;
   height: 300px;
-//   background: rgba(231, 24, 24, 0.192);
+  background: #fff;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
