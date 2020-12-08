@@ -10,7 +10,7 @@
 
     .chat_msg_body {
         height: 450px;
-        background: rgba(252, 252, 252,1);
+        background: rgba(252, 252, 252, 1);
         padding: 10px;
 
         //对方消息样式
@@ -33,7 +33,22 @@
                     border-radius: 0 10px 10px 20px;
                     font-size: 12px;
                 }
+                .img_Box {
+                    // width: 325px;
+                    // height: 250px;
+                    border-radius: 10px;
+                    margin-right: 440px;
+                    padding: 3px;
+                    // text-align: center;
+                    // background: rgb(209, 241, 254);
+                    // overflow: hidden;
 
+                    img{
+                        max-width: 100%;
+                        max-height: 100%;
+                        height: auto;
+                    }
+                }
                 .msg_time {
                     font-size: 10px;
                     font-weight: 200;
@@ -46,10 +61,12 @@
         //我方消息样式
         .chat_msg_box_right {
             margin-right: 10px;
+
             .msg_from {
                 text-align: right;
                 font-size: 16px;
             }
+
             .msg_content {
                 min-width: 391px;
                 text-align: right;
@@ -61,6 +78,23 @@
                     background: rgb(209, 241, 254);
                     border-radius: 10px 0 20px 10px;
                     font-size: 16px;
+                }
+
+                .img_Box {
+                    // width: 325px;
+                    // height: 250px;
+                    border-radius: 10px;
+                    margin-left: 440px;
+                    padding: 3px;
+                    // text-align: center;
+                    // background: rgb(209, 241, 254);
+                    // overflow: hidden;
+
+                    img{
+                        max-width: 100%;
+                        max-height: 100%;
+                        height: auto;
+                    }
                 }
 
                 .msg_time {
