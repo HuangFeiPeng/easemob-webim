@@ -2,10 +2,16 @@
   <div class="chat_sendBox">
     <!-- 功能栏 -->
     <ul class="fun_Btn">
-      <li v-for="(item, index) in btnList" :key="index" @click="fun_index = index">
-        <span :class="item.class"></span>
+      <li
+        v-for="(item, index) in btnList"
+        :key="index"
+        @click.stop="funClick(index)"
+      >
+        <span :class="item.class" :title="item.title"></span>
       </li>
-      <Emoji v-if="fun_index === 0" @getemoji="getemoji" />
+      <Emoji v-if="this.emojiHide" @getemoji="getemoji" />
+        <input type="file" id="upImage" class="upFile" @change="sendImgMessage" ref="upImg"> <!-- onChange事件监听图片url上传调用发送图片消息方法 -->
+        <input type="file" class="upFile" ref="upFile">
     </ul>
     <div class="send-content">
       <vue-scroll :ops="ops">
@@ -17,7 +23,7 @@
           @keydown="listenKeyCode($event)"
         ></textarea>
       </vue-scroll>
-      <div class="send-Btn" @click="sendMessage" v-if="inputBox != ''">
+      <div class="send-Btn" @click="sendTextMessage" v-if="inputBox != ''">
         <span class="iconfont icon-fasong"></span>
       </div>
     </div>
@@ -27,16 +33,15 @@
 import "./chat_sendBox.scss"
 import Ops from "@/utils/scrollConfig"
 import { mapActions, mapState } from "vuex"
-import Emoji from '@/components/chat_frame/emoji';
+import Emoji from "@/components/chat_frame/emoji"
 export default {
-  props: ["btnList"],
+  props: ["btnList", "emojiHide"],
   data() {
     return {
       ops: Ops,
-      isShow: true,
+      isShow: false,
       inputBox: "",
-      placeHolder: "Enter发送,Shift换行,请输入...",
-      fun_index: ""
+      placeHolder: "Enter发送,Shift换行,请输入..."
     }
   },
   computed: mapState({
@@ -44,12 +49,12 @@ export default {
     toID: state => state.chatStore.userInfo.userId
   }),
   methods: {
-    ...mapActions(["sendTextMsg", "sendCustomMsg"]),
-    //
+    ...mapActions(["sendTextMsg", "sendCustomMsg","sendImageMsg"]),
+    //监听keyCode
     listenKeyCode(event) {
       switch (event.keyCode) {
         case 13:
-          this.sendMessage()
+          this.sendTextMessage()
           event.preventDefault() //阻止浏览器默认换行
           break
         case 16:
@@ -59,9 +64,8 @@ export default {
           break
       }
     },
-    //发送消息
-    async sendMessage() {
-      //发送文本消息
+    //发送文本消息
+    async sendTextMessage() {
       this.inputBox = this.$refs["inputBoxVal"].value
       if (this.toID === "" || this.inputBox === "") {
         this.$refs["inputBoxVal"].value = ""
@@ -71,7 +75,7 @@ export default {
         msg: this.inputBox,
         to: this.toID,
         type: this.msgType,
-        contentsType: "Text"
+        contentsType: "TEXT"
       })
       setTimeout(() => {
         this.$emit("int")
@@ -79,13 +83,55 @@ export default {
       this.$refs["inputBoxVal"].value = ""
       this.inputBox = ""
     },
+    //发送图片消息
+    async sendImgMessage() {
+      if (!this.toID) {
+        return false
+      }
+      await this.sendImageMsg({
+        imgId:"upImage",
+        to: this.toID,
+        type: this.msgType,
+        contentsType: "IMAGE"
+      })
+      setTimeout(() => {
+        this.$emit("int")
+      }, 1000)
+      //提交完之后初始化value,以便再次上传同一张图片时候依然能监听到change变化。
+      this.$refs['upImg'].value = null;
+       
+    },
     //接收表情
-    getemoji(data){
-      this.inputBox = this.inputBox+data
-      console.log(">>>>>>",data);
+    getemoji(data) {
+      this.inputBox = this.inputBox + data
+      console.log(">>>>>>", data)
+    },
+    //点击处理功能栏
+    funClick(idx) {
+      // console.log(idx)
+      if (idx === 0) {
+        //更新父组件的数据，让父组件为true
+        return this.emojiHide ? this.$emit('update:emojiHide', false) : this.$emit('update:emojiHide', true);
+        // if(this.emojiHide){
+        //   this.$emit('update:emojiHide', false)
+        // }else{
+        //   this.$emit('update:emojiHide', true)
+        // }
+        
+      } else if (idx === 1) {
+        //上传图片
+        this.$refs['upImg'].click()
+      } else if (idx ===2 ) {
+        //上传文件
+        this.$refs['upFile'].click()
+      } else if( idx === 3){
+        console.log('发送语音消息~');
+      } else{
+        console.log('>>>>拉取历史消息');
+      }
     }
   },
-  components:{
+  components: {
     Emoji
   }
 }
