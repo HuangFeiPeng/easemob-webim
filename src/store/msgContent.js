@@ -2,7 +2,7 @@ import WebIM from '@/utils/WebIM.js';
 // import Storage from '../utils/storage'
 // const loginInfo = Storage.getstorage("userInfo")
 const conn = WebIM.conn
-//该方法用来预处理过来的content
+//该方法用来预处理过来的content组建key
 function msgGroup(state, chatType, data) {
     var tb = state;
     var content = data.msgContent;
@@ -77,7 +77,6 @@ const msgContent = {
     actions: {
         //发送一条文本消息
         sendTextMsg: (context, step) => {
-            // debugger;
             console.log(context, step);
             //构建基本消息存储备份
             const msgContent = {
@@ -135,7 +134,7 @@ const msgContent = {
             var msg = new WebIM.message('custom', id); // 创建自定义消息
             var customEvent = "confrInfo"; // 创建自定义事件
             var customExts = {
-                "confrID":'1216464564564646',
+                "confrID": '1216464564564646',
                 "password": '123456'
             }; // 消息内容，key/value 需要 string 类型
             msg.set({
@@ -154,16 +153,100 @@ const msgContent = {
                     })
                 },
                 fail: function (e) {
-                    console.log('>>>自定义消息发送失败',e);
+                    console.log('>>>自定义消息发送失败', e);
                 }
             });
             conn.send(msg.body);
+        },
+        //发送图片消息
+        sendImageMsg: (context, step) => {
+            console.log('>>>发送图片接收',step);
+            const {imgId,to,type,contentsType} = step;
+            var msgUrl;
+            var id = conn.getUniqueId(); // 生成本地消息id
+            var msg = new WebIM.message('img', id); // 创建图片消息
+            var input = document.getElementById(imgId); // 选择图片的input
+            var file = WebIM.utils.getFileUrl(input); // 将图片转化为二进制文件
+            var allowType = {
+                'jpg': true,
+                'jpeg': true,
+                'gif': true,
+                'png': true,
+                'bmp': true
+            };
+            if (file.filetype.toLowerCase() in allowType) {
+                var option = {
+                    file: file,
+                    // length: '3000', // 视频文件时，单位(ms)
+                    ext: {
+                        file_length: file.data.size // 文件大小
+                    },
+                    to: to, // 接收消息对象
+                    chatType: type, // 聊天类型
+                    onFileUploadError: function (e) { // 消息上传失败
+                        console.log('onFileUploadError',e);
+                    },
+                    onFileUploadComplete: function (res) { // 消息上传成功
+                        console.log('onFileUploadComplete',res);
+                        var imgUrl = `${res.uri}/${res.entities[0].uuid}` //拼接图片URL
+                        return msgUrl= imgUrl;
+                        
+                    },
+                    success: function (id,serverMsgId) { // 消息发送成功
+                        console.log('Success',serverMsgId);
+                        // const msgContent = {
+                        //     contentsType: contentsType,
+                        //     chatType: type,
+                        //     msgData: msgData,
+                        //     ext: {},
+                        //     from: conn.user,
+                        //     to: to,
+                        //     time: new Date().getTime(),
+                        //     right: false
+            
+                        // }
+                        const msgContent = {
+                            contentsType: contentsType,
+                            chatType: type,
+                            msgData: {
+                                fileLength: 'msg.file_length',
+                                fileType: 'msg.filetype',
+                                fileName: 'msg.filename',
+                                secret: 'msg.secret',
+                                imgUrl: msgUrl,
+                                width:'msg.width',
+                                height: 'msg.height',
+        
+                            },
+                            ext: msg.ext,
+                            from: conn.user,
+                            to: to,
+                            time: new Date().getTime(),
+                            right: false
+                        }
+                        context.commit('addNewMessage',{
+                            data: {
+                                msgContent,
+                                serverMsgId
+                            },
+                            chatType: type
+                        })
+                        // console.log('>>>>>>',msgData);
+                    },
+                    fail: function (e) {
+                        console.log("Fail",e); //如禁言、拉黑后发送消息会失败
+                    },
+                    flashUpload: WebIM.flashUpload
+                };
+                msg.set(option);
+                conn.send(msg.body);
+            }
         }
     },
     getters: {
-       getMsgList:(state) =>{
+        getMsgList: (state) => {
             return state.msgList
-       }
+        }
     }
 }
 
