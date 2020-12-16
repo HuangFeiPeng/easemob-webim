@@ -413,11 +413,12 @@ export default {
     font-size: 22px;
     // border: 1px solid red;
     text-align: center;
-    transition: all .8s;
+    transition: all .3s;
     cursor: pointer;
     &:hover{
       border-radius: 5px;
-      background: rgba(160, 158, 158, 0.39);
+      // background: rgba(160, 158, 158, 0.39);
+      transform: scale(1.5);
     }
   }
   
