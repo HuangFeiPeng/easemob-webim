@@ -39,7 +39,7 @@ var config = {
   // appkey: "1119190917098768#test", // App key
   appkey: "easemob-demo#chatdemoui", // App key
 
-  https: false, // 是否使用https
+  https: true, // 是否使用https
 
   isHttpDNS: true, // 3.0 SDK支持，防止DNS劫持从服务端获取XMPPUrl、restUrl
 

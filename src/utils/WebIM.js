@@ -1,49 +1,7 @@
 import websdk from "easemob-websdk";
 import config from "./WebIMConfig";
-// import getNowTime from "./getTime";
 import someFun from "./function";
-console.log(someFun.otherMsg);
-// import Vue from "vue";
-//封装来自他人的消息体
-// function otherMsg(message) {
-//   let Type = {
-//     chat: 'singleChat',
-//     groupchat: 'groupChat',
-//     chatroom: 'chatRoom'
-//   }
-//   let serverMsgId = message.id;
-//   let chatType = Type[message.type];
-//   console.log('>>>>传入的消息', message);
-//   const otherMessage = {
-//     contentsType: message.contentsType,
-//     msgData: message.data,
-//     ext: message.ext,
-//     from: message.from,
-//     to: message.to,
-//     time: message.time,
-//     // status: null,
-//     source: 'other'
-//   }
-//   console.log('>>>>接收的othermessage', otherMessage);
-//   window.Vue.$store.commit('addNewMessage', {
-//     data: {
-//       otherMessage,
-//       serverMsgId
-//     },
-//     chatType
-//   })
-// }
-// console.log(otherMessage);
-// const otherMsg = {
-//   contentsType: step.type,
-//   msgData: step.msg,
-//   ext: {},
-//   from: conn.user,
-//   to: step.to,
-//   time: new Date().getTime(),
-//   // status: null,
-//   source: 'self'
-// }
+
 var conn = {};
 var WebIM = {};
 WebIM = websdk;
@@ -107,9 +65,14 @@ conn.listen({
 
   }, //收到图片消息
   onCmdMessage: function () {}, //收到命令消息
-  onAudioMessage: function () {}, //收到音频消息
+  onAudioMessage: function (msg) {
+    console.log('>>>>>收到音频消息',msg);
+  }, //收到音频消息
   onLocationMessage: function () {}, //收到位置消息
-  onFileMessage: function () {}, //收到文件消息
+  onFileMessage: function (msg) {
+    console.log('>>>>>收到文件消息',msg);
+    someFun.otherMsg(msg)
+  }, //收到文件消息
   onCustomMessage: function (msg) {
     console.log('收到自定义消息', msg);
     someFun.otherMsg(msg)
@@ -155,7 +118,7 @@ conn.listen({
   }, //收到消息送达服务器回执
   // onDeliveredMessage: function (message) {}, //收到消息送达客户端回执
   onReadMessage: function (message) {
-    console.log(">>>>收到已读回执", message);
+    // console.log(">>>>收到已读回执", message);
   }, //收到消息已读回执
   onCreateGroup: function () {}, //创建群组成功回执（需调用createGroupNew）
   onMutedMessage: function () {} //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
