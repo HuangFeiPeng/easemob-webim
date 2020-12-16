@@ -16,17 +16,25 @@
     flex-direction: row;
     align-items: center;
     border-bottom: 1px solid black;
-
+    &:hover{
+      border-radius: 5px 5px 0 0;
+      // font-weight: bold;
+    }
     li {
       margin-left: 10px;
-
+      
       .iconfont {
         font-size: 20px;
         font-weight: 400;
+        transition: all .5s;
         cursor: pointer;
 
         &:active {
           color: blue;
+        }
+        &:hover{
+          transform: scale(2);
+          text-shadow: 2px 2px 2px rgb(20, 20, 20);
         }
       }
     }

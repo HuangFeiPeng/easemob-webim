@@ -11,7 +11,7 @@
       </li>
       <Emoji v-if="this.emojiHide" @getemoji="getemoji" />
         <input type="file" id="upImage" class="upFile" @change="sendImgMessage" ref="upImg"> <!-- onChange事件监听图片url上传调用发送图片消息方法 -->
-        <input type="file" class="upFile" ref="upFile">
+        <input type="file" id="upFiles" class="upFile" @change="sendFileMessage" ref="upFile">
     </ul>
     <div class="send-content">
       <vue-scroll :ops="ops">
@@ -49,7 +49,7 @@ export default {
     toID: state => state.chatStore.userInfo.userId
   }),
   methods: {
-    ...mapActions(["sendTextMsg", "sendCustomMsg","sendImageMsg"]),
+    ...mapActions(["getNowMsg","sendTextMsg", "sendCustomMsg","sendImageMsg","sendFilesMsg"]),
     //监听keyCode
     listenKeyCode(event) {
       switch (event.keyCode) {
@@ -69,7 +69,7 @@ export default {
       this.inputBox = this.$refs["inputBoxVal"].value
       if (this.toID === "" || this.inputBox === "") {
         this.$refs["inputBoxVal"].value = ""
-        return
+        return false
       }
       await this.sendTextMsg({
         msg: this.inputBox,
@@ -77,29 +77,45 @@ export default {
         type: this.msgType,
         contentsType: "TEXT"
       })
-      setTimeout(() => {
-        this.$emit("int")
-      }, 300)
+      // setTimeout(() => {
+      //   this.$emit("intMsg")
+      // }, 300)
+      // this.getNowMsg({myID:this.$conn.user,overID:this.toID,type:this.msgType})
       this.$refs["inputBoxVal"].value = ""
       this.inputBox = ""
     },
     //发送图片消息
-    async sendImgMessage() {
-      if (!this.toID) {
-        return false
-      }
+    async sendImgMessage(e,template) {
+      console.log('sendImgMessage', e)
+      if (!this.toID)  return false
+      var el = this.$refs['upImg']
       await this.sendImageMsg({
         imgId:"upImage",
         to: this.toID,
         type: this.msgType,
-        contentsType: "IMAGE"
+        contentsType: "IMAGE",
+        Dom:el,
       })
-      setTimeout(() => {
-        this.$emit("int")
-      }, 1000)
       //提交完之后初始化value,以便再次上传同一张图片时候依然能监听到change变化。
       this.$refs['upImg'].value = null;
        
+    },
+    //发送文件消息
+    async sendFileMessage(e){
+      console.log('sendFileMessage', e)
+      var el = this.$refs['upFile']
+      // console.log(a);
+      if (!this.toID) return false
+       await this.sendFilesMsg({
+        fileId:"upFiles",
+        to: this.toID,
+        type: this.msgType,
+        contentsType: "FILE",
+        Dom:el,
+        fileInfo:e.target.files[0]
+      })
+      //提交完之后初始化value,以便再次上传同一张图片时候依然能监听到change变化。
+      // this.$refs['upFile'].value = null;
     },
     //接收表情
     getemoji(data) {

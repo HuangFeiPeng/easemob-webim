@@ -2,22 +2,48 @@
   <div id="chat-msg">
     <ChatHeader></ChatHeader>
     <div class="chat_msg_body" @click.stop="show = false">
-      <!-- <div class="chat_msg_body"  @click.stop="aaa"> -->
       <vue-scroll :ops="ops" ref="vs">
         <!-- 每一个聊天气泡 -->
         <div
-          v-for="(item, index) in nowList"
+          v-for="(item, index) in nowMsgList"
           :key="index"
           :class="item.right ? 'chat_msg_box_right' : 'chat_msg_box_left'"
         >
           <div class="msg_from">{{ item.from }}</div>
           <div class="msg_content">
+            <!-- 文本消息显示 -->
             <p v-if="item.contentsType === 'TEXT'">
               {{ item.msgData }}
             </p>
+            <!-- 图片消息显示 -->
             <div class="img_Box" v-else-if="item.contentsType === 'IMAGE'">
               <!-- hiugigigi -->
               <img :src="item.msgData.imgUrl" alt="图片加载失败..." />
+            </div>
+            <!-- 文件消息显示 -->
+            <div
+              class="file_Box"
+              v-else-if="item.contentsType === 'FILE'"
+              @dblclick="downLoadFile(item, this)"
+              :title="'双击下载'"
+            >
+              <div class="file_Box_hd">
+                <div class="file_icon">
+                  <span class="iconfont icon-wenjian"></span>
+                </div>
+                <div class="file_name">
+                  {{ "文件:" + item.msgData.fileName }}
+                </div>
+                <a
+                  :href="item.msgData.fileUrl"
+                  :download="item.msgData.fileName"
+                  ref="dowload"
+                ></a>
+              </div>
+
+              <div class="file_size">
+                {{ changeSize(item.msgData.fileLength) }}
+              </div>
             </div>
             <div class="msg_time">{{ changeTime(item.time) }}</div>
           </div>
@@ -26,7 +52,7 @@
     </div>
     <ChatSendBox
       :btnList="btn_List"
-      @int="int"
+      @intMsg="intMsg"
       :emojiHide.sync="show"
     ></ChatSendBox>
     <!-- sync修饰符为语法糖：当一个子组件改变了一个 prop 的值时，这个变化也会同步到父组件中所绑定。 -->
@@ -36,9 +62,10 @@
 import "./chat_content.scss"
 import Ops from "@/utils/scrollConfig"
 import changeTime from "@/utils/getTime"
+import changeSize from "@/utils/function"
 import ChatHeader from "@/components/chat_frame/chat_header/chat_header"
 import ChatSendBox from "@/components/chat_frame/chat_sendBox/chat_sendBox"
-import { mapState } from "vuex"
+import { mapState, mapGetters, mapActions } from "vuex"
 export default {
   data() {
     return {
@@ -57,10 +84,14 @@ export default {
   },
   created() {
     this.changeTime = changeTime
+    this.changeSize = changeSize.readablizeBytes
     ;(this.msgList = this.$store.state.msgContent.msgList),
       (this.userInfo = this.$store.state.chatStore.userInfo)
   },
   computed: {
+    ...mapGetters({
+      nowMsgList: "onGetMsgList"
+    }),
     userId() {
       return this.userInfo.userId
     }
@@ -68,24 +99,23 @@ export default {
   watch: {
     //监听具体的userId，如果userID改变拉取对应的历史消息。
     userId(newVal, oldVal) {
-      this.int()
+      this.intMsg()
     },
     //监听当nowList更新时就触发滚动条置底
-    nowList(newVal, oldVal) {
+    nowMsgList(newVal, oldVal) {
+      // console.log('>>>>>消息更新',newVal, oldVal);
       this.moveScrollBar()
     }
   },
   methods: {
+    ...mapActions(['getNowMsg']),
     //处理消息将消息从msgList中拉取并更新
-    int() {
-      var arr = []
-      if (this.$conn.user && this.userInfo.userId) {
-        var key = `${this.$conn.user}-${this.userInfo.userId}`
-        var type = this.userInfo.type
-        arr = this.msgList[type][key] || []
-        this.moveScrollBar()
-      }
-      return (this.nowList = arr)
+    intMsg() {
+      this.getNowMsg({
+        myID: this.$conn.user,
+        overID: this.userInfo.userId,
+        type: this.userInfo.type
+      })
     },
     //调整消息内容部分的滚动条位置。
     moveScrollBar() {
@@ -96,6 +126,11 @@ export default {
         1000,
         "easeInQuad"
       )
+    },
+    //双击下载附件
+    downLoadFile(data, a) {
+      this.$refs["dowload"][0].click()
+      console.log("点击下载成功", data)
     }
   },
   components: {
