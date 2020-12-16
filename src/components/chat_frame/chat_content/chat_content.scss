@@ -1,3 +1,9 @@
+@mixin textEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 #chat-msg {
     position: relative;
     left: 400px;
@@ -9,7 +15,7 @@
     background: #c6d7ea;
 
     .chat_msg_body {
-        height: 450px;
+        height: 448px;
         background: rgba(252, 252, 252, 1);
         padding: 10px;
 
@@ -27,12 +33,13 @@
 
                 p {
                     display: inline-block;
-                    text-indent: 1em;
+                    text-indent: .5em;
                     padding: 10px;
                     background: rgb(247, 242, 242);
-                    border-radius: 0 10px 10px 20px;
+                    border-radius: 10px;
                     font-size: 12px;
                 }
+
                 .img_Box {
                     // width: 325px;
                     // height: 250px;
@@ -43,11 +50,62 @@
                     // background: rgb(209, 241, 254);
                     // overflow: hidden;
 
-                    img{
+                    img {
                         max-width: 100%;
                         max-height: 100%;
                         height: auto;
                     }
+                    
+                }
+                .file_Box {
+                    width: 200px;
+                    height: 80px;
+                    margin-right: 560px;
+                    background: rgba(24, 135, 238, 0.356);
+                    border-radius: 5px;
+                    padding: 3px;
+                    cursor: pointer;
+
+                    .file_Box_hd {
+                        width: 100%;
+                        height: 35px;
+                        display: flex;
+                        flex-direction: row;
+                        margin: 8px 0 8px 0;
+                        border-bottom: 1px solid #fff;
+                        color: rgb(8, 8, 8);
+
+                        .file_name {
+                            width: 160px;
+                            height: 35px;
+                            border-radius: 5px;
+                            text-align: left;
+                            line-height: 35px;
+                            @include textEllipsis
+                        }
+
+                        .file_icon {
+                            width: 40px;
+                            height: 35px;
+                            text-align: center;
+                            line-height: 35px;
+
+                            span {
+                                font-size: 33px;
+                            }
+                        }
+
+                    }
+
+                    .file_size {
+                        width: 80px;
+                        font-size: 13px;
+                        font-weight: 300;
+                        text-align: left;
+                        margin: 10px;
+                        @include textEllipsis
+                    }
+
                 }
                 .msg_time {
                     font-size: 10px;
@@ -65,6 +123,7 @@
             .msg_from {
                 text-align: right;
                 font-size: 16px;
+                @include textEllipsis
             }
 
             .msg_content {
@@ -90,11 +149,62 @@
                     // background: rgb(209, 241, 254);
                     // overflow: hidden;
 
-                    img{
+                    img {
                         max-width: 100%;
                         max-height: 100%;
                         height: auto;
                     }
+                }
+
+                .file_Box {
+                    width: 200px;
+                    height: 80px;
+                    margin-left: 560px;
+                    background: rgba(24, 135, 238, 0.356);
+                    border-radius: 5px;
+                    padding: 3px;
+                    cursor: pointer;
+                    
+                    .file_Box_hd {
+                        width: 100%;
+                        height: 35px;
+                        display: flex;
+                        flex-direction: row;
+                        margin: 8px 0 8px 0;
+                        border-bottom: 1px solid #fff;
+                        color: rgb(8, 8, 8);
+
+                        .file_name {
+                            width: 160px;
+                            height: 35px;
+                            border-radius: 5px;
+                            text-align: left;
+                            line-height: 35px;
+                            @include textEllipsis
+                        }
+
+                        .file_icon {
+                            width: 40px;
+                            height: 35px;
+                            text-align: center;
+                            line-height: 35px;
+
+                            span {
+                                font-size: 33px;
+                            }
+                        }
+
+                    }
+
+                    .file_size {
+                        width: 80px;
+                        font-size: 13px;
+                        font-weight: 300;
+                        text-align: left;
+                        margin: 10px;
+                        @include textEllipsis
+                    }
+
                 }
 
                 .msg_time {
