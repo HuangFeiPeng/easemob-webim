@@ -1,5 +1,4 @@
 import WebIM from '@/utils/WebIM.js'
-console.log('>>>>store', WebIM);
 const chatStore = {
     state: {
         //列表分类
