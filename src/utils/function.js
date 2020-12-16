@@ -1,3 +1,4 @@
+import storage from "./storage";
 let someFun = {
     //处理将接受到的消息存入。
     otherMsg(msg) {
@@ -61,7 +62,36 @@ let someFun = {
                 })
                 break;
             }
+            case 'FILE': {
+                const msgContent = {
+                    contentsType: msg.contentsType,
+                    chatType: chatType,
+                    msgData: {
+                        fileLength: msg.file_length,
+                        fileType: msg.filetype,
+                        fileName: msg.filename,
+                        secret: msg.secret,
+                        fileUrl: msg.url,
+                        width: msg.width,
+                        height: msg.height,
 
+                    },
+                    ext: msg.ext,
+                    from: msg.from,
+                    to: msg.to,
+                    time: msg.time,
+                    right: false
+                }
+                window.Vue.$store.commit('addNewMessage', {
+                    data: {
+
+                        msgContent,
+                        serverMsgId
+                    },
+                    chatType
+                })
+                break
+            }
             default:
                 break;
         }
@@ -75,7 +105,13 @@ let someFun = {
         msg = msg.replace(/[|]*\n/, '') //去除行尾空格
         msg = msg.replace(/&npsp;/ig, ''); //去掉npsp
         return msg;
-    }
+    },
+    //文件Size转换
+    readablizeBytes(value) {
+        let s = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
+        let e = Math.floor(Math.log(value) / Math.log(1024));
+        return (value / Math.pow(1024, Math.floor(e))).toFixed(2) + " " + s[e];
+    },
 }
 
 export default someFun;
