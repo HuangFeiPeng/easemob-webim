@@ -6,6 +6,7 @@ import store from "./store";
 import WebIM from "./utils/WebIM";
 
 Vue.config.productionTip = false;
+Vue.config.devtools = true;
 Vue.use(vuescroll);
 // Vue.use(WebIM)
 Vue.prototype.$WebIM = WebIM;

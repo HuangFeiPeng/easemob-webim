@@ -38,36 +38,48 @@ function msgGroup(state, chatType, data) {
     msgColls.push(content);
     return tb
 }
-//处理添加消息到nowList
-function addNowMsg(chatMsgs, chatType) {
-    //循环过来的对象
+//处理添加消息到nowList（消息分发）
+function addNowMsg(chatMsgs, chatType, data) {
+    //他人环信ID
+    let overId = ''
+    let nowMsg = []
+    //处理是否为发送方，如果是取to，不是则取from
+    data.right ? overId = data.to : overId = data.from;
+    //取当前的选中的目标ID
+    let nowId = window.Vue.$store.state.chatStore.userInfo.userId
+    //拼接key
+    let nowKey = `${conn.user}-${overId}`
+    //循环穿过来的消息对象
     for (const key in chatMsgs) {
         if (Object.hasOwnProperty.call(chatMsgs, key)) {
-            //取出对应key下的对象
-            let nowMsg = chatMsgs[key]
-            //获取当前选中的环信ID
-            let nowID = window.Vue.$store.state.chatStore.userInfo.userId
-            //将当前消息循环判断from是否是选中ID to是否是当前选中ID 如果是就return（群组聊天室一样）
-            for (var i = 0; i < nowMsg.length; i++) {
-                console.log('>>>>>', nowMsg[i].to, nowMsg[i].from);
-                if (chatType === 'singleChat') {
-                    if (nowMsg[i].from == nowID || nowMsg[i].to == nowID) {
-                        return nowMsg
-                    } else {
-                        return false
+            const element = chatMsgs[key];
+            console.log(element);
+            if (chatType === 'singleChat') {
+                //如果是单聊则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
+                if (data.from == nowId || data.to == nowId) {
+                    if (key === nowKey) {
+                        nowMsg = element
                     }
-                } else if (chatType === 'groupChat' || chatType === 'chatRoom') {
-                    // debugger
-                    if (nowMsg[i].to == nowID) {
-                        return nowMsg
-                    } else {
-                        return false
+                } else {
+                    return false
+                }
+            } else if(chatType === 'groupChat' || chatType === 'chatRoom') {
+                //如果是聊天室或群组则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
+                //由于群组聊天室to字段永远是聊天室或者是群组ID，所以重新拼接key
+                var toKey = `${conn.user}-${data.to}`
+                console.log('成功触发过来的消息');
+                if (data.to == nowId) {
+                    console.log('>>>>>没错是当前选中的群或者聊天室');
+                    if (key === toKey) {
+                        nowMsg = element
+                        console.log('>>>>>>也是当前的key');
                     }
                 }
-
             }
         }
     }
+    console.log('>>>>>>即将抛出的', nowMsg);
+    return nowMsg
 }
 const msgContent = {
     state: {
@@ -81,10 +93,6 @@ const msgContent = {
         nowMsgList: []
     },
     mutations: {
-        //修改当前的聊天类型
-        chatMsgType: (state, payload) => {
-            console.log(state, payload);
-        },
         //向消息List当中添加一条new消息
         addNewMessage: (state, payload) => {
             const {
@@ -96,17 +104,16 @@ const msgContent = {
             switch (chatType) {
                 case 'singleChat':
                     state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
-                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType)
+                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType, data.msgContent)
                     // console.log('>>>>>>>',state.msgList[chatType]);
-
                     break;
                 case 'groupChat':
                     state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
-                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType)
+                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType, data.msgContent)
                     break;
                 case 'chatRoom':
                     state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
-                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType)
+                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType, data.msgContent)
                     break;
                 default:
                     break;
