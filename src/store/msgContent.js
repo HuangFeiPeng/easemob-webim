@@ -63,7 +63,7 @@ function addNowMsg(chatMsgs, chatType, data) {
                 } else {
                     return false
                 }
-            } else if(chatType === 'groupChat' || chatType === 'chatRoom') {
+            } else if (chatType === 'groupChat' || chatType === 'chatRoom') {
                 //如果是聊天室或群组则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
                 //由于群组聊天室to字段永远是聊天室或者是群组ID，所以重新拼接key
                 var toKey = `${conn.user}-${data.to}`
@@ -394,6 +394,46 @@ const msgContent = {
                 msg.set(option);
                 conn.send(msg.body);
             }
+        },
+        //发送音频消息
+        sendAudioMsg: (context, step) => {
+            const {to,type,contentsType,file} = step
+            console.log('>>>>>>>接收到传入store的音频',step);
+            let id = conn.getUniqueId(); // 生成本地消息id
+            let msg = new WebIM.message('audio', id); // 创建音频消息
+            // var input = document.getElementById('audio'); // 选择音频的input
+            // var file = WebIM.utils.getFileUrl(input); // 将音频转化为二进制文件
+            // let allowType = {
+            //     'mp3': true,
+            //     'amr': true,
+            //     'wmv': true
+            // };
+            // if (file.filetype.toLowerCase() in allowType) {
+                var option = {
+                    file: file,
+                    length: '3', // 音频文件时长，单位(s)
+                    to: to, // 接收消息对象
+                    chatType: type, // 设置单聊
+                    onFileUploadError: function () { // 消息上传失败
+                        console.log('onFileUploadError');
+                    },
+                    onFileUploadComplete: function (res) { // 消息上传成功
+                        console.log('onFileUploadComplete',res);
+                    },
+                    success: function () { // 消息发送成功
+                        console.log('Success');
+                    },
+                    fail: function (e) {
+                        console.log("Fail",e); //如禁言、拉黑后发送消息会失败
+                    },
+                    flashUpload: WebIM.flashUpload,
+                    ext: {
+                        file_length: file.data.size
+                    }
+                };
+                msg.set(option);
+                conn.send(msg.body);
+            // }
         }
     },
     getters: {

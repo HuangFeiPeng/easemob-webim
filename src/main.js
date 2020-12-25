@@ -1,5 +1,5 @@
 import Vue from "vue";
-import vuescroll from 'vuescroll/dist/vuescroll-native';
+import vuescroll from 'vuescroll/dist/vuescroll-native'; //滚动插件
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";

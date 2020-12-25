@@ -1,7 +1,7 @@
 <template>
   <div id="chat-msg">
     <ChatHeader></ChatHeader>
-    <div class="chat_msg_body" @click.stop="show = false">
+    <div class="chat_msg_body" @click.stop="allHideBox">
       <vue-scroll :ops="ops" ref="vs">
         <!-- 每一个聊天气泡 -->
         <div
@@ -53,7 +53,8 @@
     <ChatSendBox
       :btnList="btn_List"
       @intMsg="intMsg"
-      :emojiHide.sync="show"
+      :emojiHide.sync="emojiShow"
+      :audioHide.sync="audioShow"
     ></ChatSendBox>
     <!-- sync修饰符为语法糖：当一个子组件改变了一个 prop 的值时，这个变化也会同步到父组件中所绑定。 -->
   </div>
@@ -72,7 +73,8 @@ export default {
       ops: Ops,
       nowList: [],
       userInfo: {},
-      show: false,
+      emojiShow: false,
+      audioShow: false,
       btn_List: [
         { class: "iconfont icon-biaoqing", title: "发送表情" },
         { class: "iconfont icon-tuku", title: "发送图片" },
@@ -108,7 +110,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getNowMsg']),
+    ...mapActions(["getNowMsg"]),
     //处理消息将消息从msgList中拉取并更新
     intMsg() {
       this.getNowMsg({
@@ -131,6 +133,11 @@ export default {
     downLoadFile(data, a) {
       this.$refs["dowload"][0].click()
       console.log("点击下载成功", data)
+    },
+    //点击body隐藏表情框以及录音框
+    allHideBox:function(){
+      this.emojiShow = false;
+      this.audioShow = false;
     }
   },
   components: {
