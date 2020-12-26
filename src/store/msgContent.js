@@ -39,6 +39,7 @@ function msgGroup(state, chatType, data) {
     return tb
 }
 //处理添加消息到nowList（消息分发）
+// TO DO 目前存在单聊消息如果正在聊天，受到群聊或者聊天室会清空当前的会话列表问题。
 function addNowMsg(chatMsgs, chatType, data) {
     //他人环信ID
     let overId = ''
@@ -74,6 +75,8 @@ function addNowMsg(chatMsgs, chatType, data) {
                         nowMsg = element
                         console.log('>>>>>>也是当前的key');
                     }
+                } else {
+                    return false;
                 }
             }
         }
@@ -397,43 +400,70 @@ const msgContent = {
         },
         //发送音频消息
         sendAudioMsg: (context, step) => {
-            const {to,type,contentsType,file} = step
-            console.log('>>>>>>>接收到传入store的音频',step);
+            const {
+                to,
+                type,
+                contentsType,
+                file
+            } = step
+            var msgUrl;
+            console.log('>>>>>>>接收到传入store的音频', step);
             let id = conn.getUniqueId(); // 生成本地消息id
             let msg = new WebIM.message('audio', id); // 创建音频消息
-            // var input = document.getElementById('audio'); // 选择音频的input
-            // var file = WebIM.utils.getFileUrl(input); // 将音频转化为二进制文件
-            // let allowType = {
-            //     'mp3': true,
-            //     'amr': true,
-            //     'wmv': true
-            // };
-            // if (file.filetype.toLowerCase() in allowType) {
-                var option = {
-                    file: file,
-                    length: '3', // 音频文件时长，单位(s)
-                    to: to, // 接收消息对象
-                    chatType: type, // 设置单聊
-                    onFileUploadError: function () { // 消息上传失败
-                        console.log('onFileUploadError');
-                    },
-                    onFileUploadComplete: function (res) { // 消息上传成功
-                        console.log('onFileUploadComplete',res);
-                    },
-                    success: function () { // 消息发送成功
-                        console.log('Success');
-                    },
-                    fail: function (e) {
-                        console.log("Fail",e); //如禁言、拉黑后发送消息会失败
-                    },
-                    flashUpload: WebIM.flashUpload,
-                    ext: {
-                        file_length: file.data.size
+            var option = {
+                file: file,
+                length: file.voiceTime, // 音频文件时长，单位(s)
+                to: to, // 接收消息对象
+                chatType: type, // 设置单聊
+                onFileUploadError: function () { // 消息上传失败
+                    console.log('onFileUploadError');
+                },
+                onFileUploadComplete: function (res) { // 消息上传成功
+                    console.log('onFileUploadComplete', res);
+                    var fileUrl = `${res.uri}/${res.entities[0].uuid}` //拼接URL
+                    //将上传到环信服务器的文件地址转为MP3的blob保存到本地。
+                    // console.log('>>>>>get到地址',blobUrl);
+                    return msgUrl = fileUrl
+
+                },
+                success: function (id, serverMsgId) { // 消息发送成功
+                    console.log('Success');
+                    const msgContent = {
+                        contentsType: contentsType,
+                        chatType: type,
+                        msgData: {
+                            fileLength: file.data.size,
+                            fileType: file.data.type,
+                            secret: 'msg.secret',
+                            fileUrl: msgUrl,
+                            blob: file.url,
+                            length: file.voiceTime
+
+                        },
+                        ext: msg.ext,
+                        from: conn.user,
+                        to: to,
+                        time: new Date().getTime(),
+                        right: false
                     }
-                };
-                msg.set(option);
-                conn.send(msg.body);
-            // }
+                    context.commit('addNewMessage', {
+                        data: {
+                            msgContent,
+                            serverMsgId
+                        },
+                        chatType: type
+                    })
+                },
+                fail: function (e) {
+                    console.log("Fail", e); //如禁言、拉黑后发送消息会失败
+                },
+                flashUpload: WebIM.flashUpload,
+                ext: {
+                    file_length: file.data.size
+                }
+            };
+            msg.set(option);
+            conn.send(msg.body);
         }
     },
     getters: {
