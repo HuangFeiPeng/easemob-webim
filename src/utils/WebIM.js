@@ -66,11 +66,34 @@ conn.listen({
   }, //收到图片消息
   onCmdMessage: function () {}, //收到命令消息
   onAudioMessage: function (msg) {
-    console.log('>>>>>收到音频消息',msg);
+    console.log('>>>>>收到音频消息', msg.url);
+    if (msg.url) {
+
+      var options = {
+          url: msg.url,
+          headers: {
+              'Accept': 'audio/amr'
+          }
+      };
+      options.onFileDownloadComplete = function (response) {
+          //音频下载成功，需要将response转换成blob，使用objectURL作为audio标签的src即可播放。
+          var objectURL = WebIM.utils.parseDownloadResponse.call(conn, response);
+          console.log('转译之后', objectURL);
+          someFun.otherMsg(msg,objectURL)
+      };
+
+      options.onFileDownloadError = function () {
+          //音频下载失败 
+          console.log("失败")
+      };
+      //通知服务器将音频转为mp3
+      WebIM.utils.download.call(conn, options);
+      console.log(options)
+  }
   }, //收到音频消息
   onLocationMessage: function () {}, //收到位置消息
   onFileMessage: function (msg) {
-    console.log('>>>>>收到文件消息',msg);
+    console.log('>>>>>收到文件消息', msg);
     someFun.otherMsg(msg)
   }, //收到文件消息
   onCustomMessage: function (msg) {
@@ -111,7 +134,7 @@ conn.listen({
   //     console.log(list);
   // },
   onRecallMessage: function (message) {
-    console.log('>>>>收到消息撤回的回调',message);
+    console.log('>>>>收到消息撤回的回调', message);
   }, //收到撤回消息回调
   onReceivedMessage: function (message) {
     // console.log(">>>>消息送达服务器回执", message);

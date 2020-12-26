@@ -141,8 +141,8 @@ export default {
       // this.$refs['upFile'].value = null;
     },
     //发送音频
-    async sendAudioMessage(blob) {
-      console.log("成功调用了发送音频消息", blob)
+    async sendAudioMessage(blob,time) {
+      console.log("成功调用了发送音频消息", blob,time)
       // let url = this.$WebIM.utils.parseDownloadResponse.call(this.$conn.blob)
       let url = this.$WebIM.utils.parseDownloadResponse(blob)
       let uri = {
@@ -150,7 +150,8 @@ export default {
         url: this.$WebIM.utils.parseDownloadResponse(blob),
         filename: "audio",
         filetype: "audio",
-        data: blob
+        data: blob,
+        voiceTime: time,
       }
       console.log(url)
       if(!this.toID) return false
@@ -177,11 +178,7 @@ export default {
           ? this.$emit("update:emojiHide", false)
           : this.$emit("update:emojiHide", true)
           
-        // if(this.emojiHide){
-        //   this.$emit('update:emojiHide', false)
-        // }else{
-        //   this.$emit('update:emojiHide', true)
-        // }
+  
       } else if (idx === 1) {
         //上传图片
         this.$refs["upImg"].click()

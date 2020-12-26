@@ -17,7 +17,6 @@
             </p>
             <!-- 图片消息显示 -->
             <div class="img_Box" v-else-if="item.contentsType === 'IMAGE'">
-              <!-- hiugigigi -->
               <img :src="item.msgData.imgUrl" alt="图片加载失败..." />
             </div>
             <!-- 文件消息显示 -->
@@ -45,8 +44,24 @@
                 {{ changeSize(item.msgData.fileLength) }}
               </div>
             </div>
-            <div class="msg_time">{{ changeTime(item.time) }}</div>
+            <!-- 音频消息显示 -->
+            <div
+              class="audio_Box"
+              @click="playAudio(item.msgData.blob)"
+              v-else-if="item.contentsType === 'VOICE'"
+              :style="{ width: item.msgData.length * 10 + 30 + 'px' }"
+            >
+              <span class="icon_img">
+                <img src="../../../assets/image/语音.png" alt="" />
+              </span>
+              <audio :src="item.msgData.blob" ref="voiceAudio"></audio>
+              <!-- <input type="range"> -->
+            </div>
+            <span class="msg_length" v-if="item.contentsType === 'VOICE'">{{
+              item.msgData.length
+            }}</span>
           </div>
+          <div class="msg_time">{{ changeTime(item.time) }}</div>
         </div>
       </vue-scroll>
     </div>
@@ -62,6 +77,7 @@
 <script>
 import "./chat_content.scss"
 import Ops from "@/utils/scrollConfig"
+import BenzAMRRecorder from "benz-amr-recorder/BenzAMRRecorder"
 import changeTime from "@/utils/getTime"
 import changeSize from "@/utils/function"
 import ChatHeader from "@/components/chat_frame/chat_header/chat_header"
@@ -135,9 +151,17 @@ export default {
       console.log("点击下载成功", data)
     },
     //点击body隐藏表情框以及录音框
-    allHideBox:function(){
-      this.emojiShow = false;
-      this.audioShow = false;
+    allHideBox: function() {
+      this.emojiShow = false
+      this.audioShow = false
+    },
+    playAudio: function(src) {
+      console.log(src);
+      let armRec = new BenzAMRRecorder()
+      armRec.initWithUrl(src).then(function() {
+        armRec.play()
+      })
+      // console.log(">>>>>>>", armRec)
     }
   },
   components: {

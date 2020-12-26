@@ -1,7 +1,7 @@
 import storage from "./storage";
 let someFun = {
     //处理将接受到的消息存入。
-    otherMsg(msg) {
+    otherMsg(msg,blob) {
         let Type = {
             chat: 'singleChat',
             groupchat: 'groupChat',
@@ -75,6 +75,36 @@ let someFun = {
                         width: msg.width,
                         height: msg.height,
 
+                    },
+                    ext: msg.ext,
+                    from: msg.from,
+                    to: msg.to,
+                    time: msg.time,
+                    right: false
+                }
+                window.Vue.$store.commit('addNewMessage', {
+                    data: {
+
+                        msgContent,
+                        serverMsgId
+                    },
+                    chatType
+                })
+                break
+            }
+            case 'VOICE': {
+
+                const msgContent = {
+                    contentsType: msg.contentsType,
+                    chatType: chatType,
+                    msgData: {
+                        fileLength: msg.file_length,
+                        fileType: msg.filetype,
+                        fileName: msg.filename,
+                        secret: msg.secret,
+                        fileUrl: msg.url,
+                        length:msg.length,
+                        blob:blob
                     },
                     ext: msg.ext,
                     from: msg.from,

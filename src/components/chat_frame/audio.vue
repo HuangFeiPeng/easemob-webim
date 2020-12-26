@@ -3,7 +3,9 @@
     <div class="audio_title">
       <b class="line"></b>
       <span v-show="parms.audio_type === 0">点击录音</span>
-      <span v-show="parms.audio_type > 0">{{ parms.audio_length | recTime }}</span>
+      <span v-show="parms.audio_type > 0">{{
+        parms.audio_length | recTime
+      }}</span>
       <b class="line"></b>
     </div>
     <div class="record_btnOut">
@@ -23,8 +25,8 @@
       <div class="record_stop" v-if="parms.audio_type === 2"></div>
     </div>
     <div class="audio_btns" v-if="parms.audio_type === 2">
-      <span class="btns send_btn" @click="sendAudioMsg">发送</span>
-      <span class="btns cancel_btn" @click="cancelSend">取消</span>
+      <span class="btns send_btn" @click.stop="sendAudioMsg">发送</span>
+      <span class="btns cancel_btn" @click.stop="cancelSend">取消</span>
     </div>
   </div>
 </template>
@@ -37,18 +39,35 @@ export default {
         audio_length: 0, //录音时长
         audio_timer: null, //录音定时器
         audio_type: 0, // 0未录音,1开始录音，2停止录音
-        audio_src: null //录音资源
+        audio_src: null, //录音资源,
+        audio_time: 0 //计算后的录音时长
       }
     }
   },
-  filters:{
+  filters: {
     //处理现实的录制时间
-      recTime(val){
-        //分 向下舍入，val满六十秒取一为一分钟。
-       let min = Math.floor(val/60) ,
-          sec = val % 60;
-       return min + '：'+(sec< 10?'0'+sec:sec)
-      }
+    recTime(val) {
+      //分 向下舍入，val满六十秒取一为一分钟。
+      let min = Math.floor(val / 60),
+        sec = val % 60
+      return min + "：" + (sec < 10 ? "0" + sec : sec)
+    }
+  },
+  computed: {
+    addAudio_time() {
+      let len = this.parms.audio_length;
+      // let min = Math.floor(len / 60),
+        let sec = len % 60
+        // return min + "." + (sec < 10 ? "0" + sec : sec)
+        return sec
+    }
+  },
+  watch:{
+    //监听到length变化之后将新的参数传入到audio_time中。
+    addAudio_time(newVal,oldVal){
+      this.parms.audio_time = newVal
+      // console.log('监听到length改变',newVal);
+    }
   },
   methods: {
     //开始录音
@@ -85,9 +104,10 @@ export default {
             this.amrRec.cancelRecord()
             console.log(">>>>>放弃了录音")
           } else {
-            console.log(">>>>结束录音", this.amrRec.getBlob())
+            // console.log(">>>>结束录音", this.amrRec.getBlob())
             this.parms.audio_src = this.amrRec.getBlob()
             this.parms.audio_type = 2
+            
           }
         })
         .catch(e => {
@@ -95,15 +115,17 @@ export default {
         })
     },
     //发送语音消息
-    sendAudioMsg:function(){
-        //将采集到的blob音视频资源传入父组件进行发送
-        this.$emit('sendAudioMessage',this.parms.audio_src);
+    sendAudioMsg: function() {
+      //将采集到的blob音视频资源传入父组件进行发送
+
+      this.$emit("sendAudioMessage", this.parms.audio_src,this.parms.audio_time)
     },
     //取消发送
-    cancelSend:function(){
-        this.parms.audio_type =0;
-        this.parms.audio_src = null;
-        this.parms.audio_length =0;
+    cancelSend: function() {
+      this.parms.audio_type = 0
+      this.parms.audio_src = null
+      this.parms.audio_length = 0
+      this.parms.audio_time = 0
     }
   }
 }
