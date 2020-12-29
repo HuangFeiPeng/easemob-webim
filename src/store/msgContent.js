@@ -40,50 +40,82 @@ function msgGroup(state, chatType, data) {
 }
 //处理添加消息到nowList（消息分发）
 // TO DO 目前存在单聊消息如果正在聊天，受到群聊或者聊天室会清空当前的会话列表问题。
-function addNowMsg(chatMsgs, chatType, data) {
-    //他人环信ID
-    let overId = ''
-    let nowMsg = []
-    //处理是否为发送方，如果是取to，不是则取from
-    data.right ? overId = data.to : overId = data.from;
-    //取当前的选中的目标ID
-    let nowId = window.Vue.$store.state.chatStore.userInfo.userId
-    //拼接key
-    let nowKey = `${conn.user}-${overId}`
-    //循环穿过来的消息对象
-    for (const key in chatMsgs) {
-        if (Object.hasOwnProperty.call(chatMsgs, key)) {
-            const element = chatMsgs[key];
-            console.log(element);
-            if (chatType === 'singleChat') {
-                //如果是单聊则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
-                if (data.from == nowId || data.to == nowId) {
-                    if (key === nowKey) {
-                        nowMsg = element
-                    }
-                } else {
-                    return false
-                }
-            } else if (chatType === 'groupChat' || chatType === 'chatRoom') {
-                //如果是聊天室或群组则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
-                //由于群组聊天室to字段永远是聊天室或者是群组ID，所以重新拼接key
-                var toKey = `${conn.user}-${data.to}`
-                console.log('成功触发过来的消息');
-                if (data.to == nowId) {
-                    console.log('>>>>>没错是当前选中的群或者聊天室');
-                    if (key === toKey) {
-                        nowMsg = element
-                        console.log('>>>>>>也是当前的key');
-                    }
-                } else {
-                    return false;
-                }
+// function addNowMsg(chatMsgs, chatType, data) {
+//     console.log('>>>>>>>>>>', chatMsgs, chatType, data);
+//     //他人环信ID
+//     let overId = ''
+//     let nowMsg = []
+//     //处理是否为发送方，如果是取to，不是则取from
+//     data.right ? overId = data.to : overId = data.from;
+//     //取当前的选中的目标ID
+//     let nowId = window.Vue.$store.state.chatStore.userInfo.userId
+//     //拼接key
+//     let fromKey = `${conn.user}-${overId}`
+//     let nowKey = `${conn.user}-${nowId}`
+//     //循环穿过来的消息对象
+//     for (const key in chatMsgs[chatType]) {
+//         if (Object.hasOwnProperty.call(chatMsgs[chatType], key)) {
+//             const element = chatMsgs[chatType][key];
+//             console.log('>>>>>>ele', element);
+//             if (chatType === 'singleChat') {
+//                 //如果是单聊则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
+//                 if (data.from == nowId || data.to == nowId) {
+//                     if (key === fromKey) {
+//                         return nowMsg = element
+//                     }
+//                 } else {
+//                     // console.log('>>>>>>>不是当前选人能给ID',chatMsgs[aa],);
+//                     return nowMsg = chatMsgs[chatType][nowKey]
+//                 }
+//             } else if (chatType === 'groupChat' || chatType === 'chatRoom') {
+//                 //如果是聊天室或群组则进入=》判断消息来源是不是当前选中ID或发送目标是不是当前选中ID=》判断该消息的分类key是不是当前key值下的消息=》条件满足赋值
+//                 //由于群组聊天室to字段永远是聊天室或者是群组ID，所以重新拼接key
+//                 var toKey = `${conn.user}-${data.to}`
+//                 console.log('成功触发过来的消息');
+//                 if (data.to == nowId) {
+//                     console.log('>>>>>没错是当前选中的群或者聊天室');
+//                     if (key === toKey) {
+//                         return nowMsg = element
+//                     }
+//                 } else {
+//                     console.log(1111);
+//                 }
+//             }
+//         }
+//     }
+//     // console.log('>>>>>>即将抛出的', nowMsg);
+//     // return nowMsg
+// }
+
+function addNowMsg(data) {
+    let otherId = ''
+    data.right ? otherId = data.to : otherId = data.from;
+    let pickNowHxId = window.Vue.$store.state.chatStore.userInfo;
+    if (data.chatType === 'singleChat') {
+        if (otherId == pickNowHxId.userId) {
+            return data
+        } else {
+            return {
+                isRead: true,
+                data
             }
         }
     }
-    console.log('>>>>>>即将抛出的', nowMsg);
-    return nowMsg
+    if (data.chatType === 'groupChat' || data.chatType === 'chatRoom') {
+        if (data.to == pickNowHxId.userId) {
+            return data
+        } else {
+            return {
+                isRead: true,
+                data
+            }
+        }
+    }
+
 }
+
+
+
 const msgContent = {
     state: {
         //所有在线收发消息的存储
@@ -93,7 +125,8 @@ const msgContent = {
             chatRoom: {}
         },
         //存放当前联系人的消息
-        nowMsgList: []
+        nowMsgList: [],
+        unReadMsgList: []
     },
     mutations: {
         //向消息List当中添加一条new消息
@@ -107,16 +140,33 @@ const msgContent = {
             switch (chatType) {
                 case 'singleChat':
                     state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
-                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType, data.msgContent)
-                    // console.log('>>>>>>>',state.msgList[chatType]);
+                    var result = addNowMsg(data.msgContent)
+                    if (result.isRead != true) {
+                        state.nowMsgList.push(result);
+                    } else if (result.isRead) {
+                        // console.log(result);
+                        state.unReadMsgList.push(result.data)
+                    }
+                    console.log(result);
+
                     break;
                 case 'groupChat':
                     state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
-                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType, data.msgContent)
+                    var resultGroup = addNowMsg(data.msgContent)
+                    if (resultGroup.isRead != true) {
+                        state.nowMsgList.push(resultGroup);
+                    } else if (resultGroup.isRead) {
+                        state.unReadMsgList.push(resultGroup.data)
+                    }
                     break;
                 case 'chatRoom':
                     state.msgList[chatType] = msgGroup(state.msgList[chatType], chatType, data);
-                    state.nowMsgList = addNowMsg(state.msgList[chatType], chatType, data.msgContent)
+                    var resultChatRoom = addNowMsg(data.msgContent)
+                    if (resultChatRoom.isRead != true) {
+                        state.nowMsgList.push(resultChatRoom);
+                    } else if (resultChatRoom.isRead) {
+                        state.unReadMsgList.push(resultChatRoom.data)
+                    }
                     break;
                 default:
                     break;
@@ -124,7 +174,7 @@ const msgContent = {
         },
         //将获取到的当前联系人的消息往来添加进nowMsgList
         addNowMessage: (state, payload) => {
-            state.nowMsgList = payload
+            state.nowMsgList = payload || []
         }
     },
     actions: {
@@ -468,6 +518,7 @@ const msgContent = {
     },
     getters: {
         onGetMsgList: (state) => {
+            console.log('......', state);
             return state.nowMsgList
 
         }

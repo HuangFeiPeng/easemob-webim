@@ -1918,6 +1918,18 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+benz-amr-recorder@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/benz-amr-recorder/-/benz-amr-recorder-1.1.2.tgz#3eeb2472e2e318a7dc181b55d07fc89bd6200f1b"
+  integrity sha512-fudGa6ARwRHcIaZpnETqcTYHAxrZFVRXeqsYh+xWGW4eTdibIgsOMBdKBJIsOUN4pNxNU0gMs+Xe3W7revyMBw==
+  dependencies:
+    benz-recorderjs "^1.0.5"
+
+benz-recorderjs@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/benz-recorderjs/-/benz-recorderjs-1.0.5.tgz#5cb2683413d3d5fcda8c44773ffaca161186619f"
+  integrity sha512-EwedOQo9KLti7HxDi/eZY51PSRbAXnOdEZmLvJ6ro3QQSoF9Y3AXBt57MIllGvVz5vtFYMeikG+GD7qTm3+p9w==
+
 bfj@^6.1.1:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/bfj/-/bfj-6.1.2.tgz#325c861a822bcb358a41c78a33b8e6e2086dde7f"
@@ -3330,10 +3342,10 @@ easemob-webrtc@^3.2.2:
   resolved "https://registry.yarnpkg.com/easemob-webrtc/-/easemob-webrtc-3.2.2.tgz#03e46093cb0ce4168bddf23e61069ed6bfe221af"
   integrity sha512-uScTb2kLKH3pST/eDpjuSFGL+EYpEnogWaRw7Tsyl7b+kEQQZ2xtleIoIunCCZqSCattPBnZ1evDY+7J/wiYfw==
 
-easemob-websdk@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.3.2.tgz#4d75a45c47ecc90256969d9329de7c00db48f7a5"
-  integrity sha512-3T7NlQwcpkfFX+pF/h2LSS0JTlsRJDSLwVIV71rKCAaff0QwRSXT2O8vv84hLCcTK/VDlM5Uj/Cvta78Rm0MSQ==
+easemob-websdk@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.4.0.tgz#2118a3a1ec9115ada07fc79c5b11c67732d723e8"
+  integrity sha512-3LQbBOrfWpvDpA0WvbxQmQELzjsSVDxrTNyP5mdBSNfj3XE6jMEFt95xw7lpfEHjmMM3fvtHd+6OOOi2YHyThg==
 
 easy-stack@^1.0.0:
   version "1.0.0"
