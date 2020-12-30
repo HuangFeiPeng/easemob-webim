@@ -27,12 +27,14 @@ export default {
     };
   },
   methods: {
-    logOut(){
-      this.$conn.close();
+   async logOut(){
+     await this.$conn.close();
       this.isShow = false;
-      Storage.clearstorage('userInfo');
-      
-
+     await Storage.clearstorage('userInfo');
+      let initStore = Storage.getstorage('initeStore');
+      let nowStore = this.$store.state
+     await Object.assign(nowStore,initStore)
+      console.log('>>>>>nowStore',nowStore);
     }
   },
   components: {

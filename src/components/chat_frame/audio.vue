@@ -55,16 +55,16 @@ export default {
   },
   computed: {
     addAudio_time() {
-      let len = this.parms.audio_length;
+      let len = this.parms.audio_length
       // let min = Math.floor(len / 60),
-        let sec = len % 60
-        // return min + "." + (sec < 10 ? "0" + sec : sec)
-        return sec
+      let sec = len % 60
+      // return min + "." + (sec < 10 ? "0" + sec : sec)
+      return sec
     }
   },
-  watch:{
+  watch: {
     //监听到length变化之后将新的参数传入到audio_time中。
-    addAudio_time(newVal,oldVal){
+    addAudio_time(newVal, oldVal) {
       this.parms.audio_time = newVal
       // console.log('监听到length改变',newVal);
     }
@@ -107,7 +107,6 @@ export default {
             // console.log(">>>>结束录音", this.amrRec.getBlob())
             this.parms.audio_src = this.amrRec.getBlob()
             this.parms.audio_type = 2
-            
           }
         })
         .catch(e => {
@@ -118,7 +117,11 @@ export default {
     sendAudioMsg: function() {
       //将采集到的blob音视频资源传入父组件进行发送
 
-      this.$emit("sendAudioMessage", this.parms.audio_src,this.parms.audio_time)
+      this.$emit(
+        "sendAudioMessage",
+        this.parms.audio_src,
+        this.parms.audio_time
+      )
     },
     //取消发送
     cancelSend: function() {
@@ -171,6 +174,11 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: all 0.5s;
+    &:hover {
+      // transform: scale(1.1);
+      box-shadow: 2px 2px 8px gray;
+    }
     /* 录音三个阶段的按钮样式 */
     .record_start {
       width: 50px;
@@ -178,6 +186,7 @@ export default {
       border-radius: 50%;
       background: crimson;
       text-align: center;
+  
     }
     .record_recording {
       width: 35px;

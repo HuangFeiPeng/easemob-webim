@@ -23,6 +23,14 @@ conn = WebIM.conn = new WebIM.connection({
 conn.listen({
   onOpened: function () {
     console.log(">>>>与环信建立连接成功");
+    console.log('>>>>>>>>登陆');
+    // this.message = window.Vue.$message;
+    window.Vue.$message({
+      type: 'success',
+      message: 'IM连接成功！',
+      center:true
+    })
+    // console.log('>>>>>登陆', this.message);
     //登陆成功之后的跳转
     if (window.location.pathname == "/chat") {
       return
@@ -30,12 +38,19 @@ conn.listen({
       window.Vue.$router.push('/chat').catch(err => {
         err
       });
+
     }
 
 
   }, //连接成功回调
   onClosed: function () {
     console.log('>>>>环信断开连接');
+    console.log(window.Vue.$store.state);
+    window.Vue.$message({
+      type: 'warning',
+      message: 'IM连接关闭！',
+      center:true
+    })
     window.Vue.$router.push('/login').catch(err => (err))
   }, //连接关闭回调
   onContactInvited: function (msg) {
@@ -70,26 +85,26 @@ conn.listen({
     if (msg.url) {
 
       var options = {
-          url: msg.url,
-          headers: {
-              'Accept': 'audio/amr'
-          }
+        url: msg.url,
+        headers: {
+          'Accept': 'audio/amr'
+        }
       };
       options.onFileDownloadComplete = function (response) {
-          //音频下载成功，需要将response转换成blob，使用objectURL作为audio标签的src即可播放。
-          var objectURL = WebIM.utils.parseDownloadResponse.call(conn, response);
-          console.log('转译之后', objectURL);
-          someFun.otherMsg(msg,objectURL)
+        //音频下载成功，需要将response转换成blob，使用objectURL作为audio标签的src即可播放。
+        var objectURL = WebIM.utils.parseDownloadResponse.call(conn, response);
+        console.log('转译之后', objectURL);
+        someFun.otherMsg(msg, objectURL)
       };
 
       options.onFileDownloadError = function () {
-          //音频下载失败 
-          console.log("失败")
+        //音频下载失败 
+        console.log("失败")
       };
       //通知服务器将音频转为mp3
       WebIM.utils.download.call(conn, options);
       console.log(options)
-  }
+    }
   }, //收到音频消息
   onLocationMessage: function () {}, //收到位置消息
   onFileMessage: function (msg) {

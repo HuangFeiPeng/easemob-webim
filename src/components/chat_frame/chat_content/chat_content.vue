@@ -66,6 +66,7 @@
       </vue-scroll>
     </div>
     <ChatSendBox
+      v-show="userInfo.userId"
       :btnList="btn_List"
       @intMsg="intMsg"
       :emojiHide.sync="emojiShow"
