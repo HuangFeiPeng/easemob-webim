@@ -1,20 +1,24 @@
 <template>
   <div class="chat_header">
     <h3>
-      <span v-if="$store.state.chatStore.userInfo.userName">{{
-        $store.state.chatStore.userInfo.userName
-      }}</span>
-      <span v-else>{{ $store.state.chatStore.userInfo.userId }}</span>
+      <span v-if="nowIdInfo.userName">{{ nowIdInfo.userName }}</span>
+      <span v-else>{{ nowIdInfo.userId }}</span>
     </h3>
-    <!-- <h3>{{ groupId }}</h3> -->
-
-    <!-- <h3>{{ $store.state.chatStore.userInfo.userName}}</h3> -->
+    <div class="list">
+        <span class="iconfont icon-liebiao"></span>
+    </div>
   </div>
 </template>
 <script>
+import { mapState } from "vuex"
 export default {
   props: {
     name
+  },
+  computed: {
+    ...mapState({
+      nowIdInfo: state => state.chatStore.userInfo
+    })
   },
   data() {
     return {
@@ -30,11 +34,18 @@ export default {
   padding: 0 20px;
   // background: cadetblue;
   h3 {
-    // text-align: left;
+    display: inline-block;
+    width: 300px;
     margin-left: 50px;
     line-height: 50px;
     font-weight: 700;
     font-size: 25px;
   }
+  .list{
+    display: inline-block;
+    width: 100px;
+    // height: 100%;
+  }
+ 
 }
 </style>

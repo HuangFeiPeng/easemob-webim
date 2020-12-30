@@ -111,6 +111,7 @@ export default {
     },
     //登陆
     login: function() {
+      let that = this
       if (this.username != "" && this.password != "") {
         this.isDisabled = true
         this.$conn.open({
@@ -119,7 +120,11 @@ export default {
           pwd: this.password.toLocaleLowerCase(),
           appKey: this.$WebIM.config.appkey,
           success: function(res) {
-            console.log(">>>>登陆成功", res)
+            that.$notify({
+              title: `${this.user}登陆成功🤠`,
+              message: "欢迎使用IM体验Demo！",
+              type: "success"
+            })
             var userInfo = {
               username: this.user,
               password: this.pwd,
@@ -135,6 +140,7 @@ export default {
     },
     //注册
     register: function() {
+      let that = this
       this.$conn.registerUser({
         username: this.username.toLocaleLowerCase(),
         password: this.password.toLocaleLowerCase(),
@@ -142,10 +148,42 @@ export default {
         appKey: this.$WebIM.config.appkey,
         apiUrl: this.$WebIM.config.apiURL,
         success: function(res) {
+          that.$notify({
+            title: `注册成功😃`,
+            message: `您的注册ID为${that.username}，快去登陆吧！`,
+            type: "success"
+          })
           console.log("注册成功~", res)
         },
-        error: function() {
-          alert("注册失败~")
+        error: function(e) {
+          if (JSON.parse(e.data).error == "duplicate_unique_property_exists") {
+            that.$notify.error({
+              title: `注册失败🤪`,
+              message: `用户名已存在，请更换注册ID`
+            })
+          } else if (JSON.parse(e.data).error == "illegal_argument") {
+            if (JSON.parse(e.data).error_description === "USERNAME_TOO_LONG") {
+              that.$notify.error({
+                title: `注册失败🤪`,
+                message: `注册ID超过64个字节，太长了，短点吧！`
+              })
+            }
+            that.$notify.error({
+              title: `注册失败🤪`,
+              message: `注册ID不合法！`
+            })
+          } else if (JSON.parse(e.data).error == "unauthorized") {
+            that.$notify.error({
+              title: `注册失败🤪`,
+              message: `前端注册未授权！请检查是否开启开放注册模式。`
+            })
+          } else if (JSON.parse(e.data).error == "resource_limited") {
+            that.$notify.error({
+              title: `注册失败🤪`,
+              message: `该Appkey用户注册数量已达上限,请升级至企业版！`
+            })
+          }
+          console.log(">>>>>注册error", JSON.parse(e.data).error)
         }
       })
     }
