@@ -42,7 +42,7 @@
     
         }
         .changeTitle{
-            font-weight: 200;
+            font-weight: bold;
             margin-left: 70px;
             text-align: left;
         }
@@ -74,10 +74,13 @@
                 font-size: 20px;
                 background: transparent;
                 border-radius: 5px;
-                border: 1px solid #fff;
+                border: 1px solid #659bf3;
                 transition: all 0.3s;
+                outline: none;
+                // caret-color: #659bf3;
+                caret-color: #0860ee;
                 &:hover{
-                    border: 2px solid #659bf3;
+                    border: 2px solid #FFF;
                 }
             }
         }
@@ -87,6 +90,7 @@
             width: 80%;
             height: 50px;
             cursor: pointer;
+
         }
     
         .changBtn {

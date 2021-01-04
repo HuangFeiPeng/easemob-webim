@@ -52,7 +52,7 @@ import { mapActions, mapState } from "vuex"
 import Emoji from "@/components/chat_frame/emoji"
 import Audio from "@/components/chat_frame/audio"
 export default {
-  props: ["btnList", "emojiHide","audioHide"],
+  props: ["btnList", "emojiHide", "audioHide"],
   data() {
     return {
       ops: Ops,
@@ -141,8 +141,8 @@ export default {
       // this.$refs['upFile'].value = null;
     },
     //发送音频
-    async sendAudioMessage(blob,time) {
-      console.log("成功调用了发送音频消息", blob,time)
+    async sendAudioMessage(blob, time) {
+      console.log("成功调用了发送音频消息", blob, time)
       // let url = this.$WebIM.utils.parseDownloadResponse.call(this.$conn.blob)
       let url = this.$WebIM.utils.parseDownloadResponse(blob)
       let uri = {
@@ -151,15 +151,15 @@ export default {
         filename: "audio",
         filetype: "audio",
         data: blob,
-        voiceTime: time,
+        voiceTime: time
       }
       console.log(url)
-      if(!this.toID) return false
+      if (!this.toID) return false
       await this.sendAudioMsg({
-        to:this.toID,
-        type:this.msgType,
+        to: this.toID,
+        type: this.msgType,
         contentsType: "VOICE",
-        file:uri
+        file: uri
       })
     },
     //接收表情
@@ -177,8 +177,6 @@ export default {
         return this.emojiHide
           ? this.$emit("update:emojiHide", false)
           : this.$emit("update:emojiHide", true)
-          
-  
       } else if (idx === 1) {
         //上传图片
         this.$refs["upImg"].click()

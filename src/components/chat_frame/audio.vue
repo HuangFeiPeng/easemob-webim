@@ -186,7 +186,6 @@ export default {
       border-radius: 50%;
       background: crimson;
       text-align: center;
-  
     }
     .record_recording {
       width: 35px;

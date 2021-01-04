@@ -1,6 +1,6 @@
 <template>
   <div id="chat-msg">
-    <ChatHeader></ChatHeader>
+    <ChatHeader :drawerHide.sync="drawerShow"></ChatHeader>
     <div class="chat_msg_body" @click.stop="allHideBox">
       <vue-scroll :ops="ops" ref="vs">
         <!-- 每一个聊天气泡 -->
@@ -65,6 +65,7 @@
         </div>
       </vue-scroll>
     </div>
+    <Drawer v-if="drawerShow" />
     <ChatSendBox
       v-show="userInfo.userId"
       :btnList="btn_List"
@@ -82,6 +83,7 @@ import BenzAMRRecorder from "benz-amr-recorder/BenzAMRRecorder"
 import changeTime from "@/utils/getTime"
 import changeSize from "@/utils/function"
 import ChatHeader from "@/components/chat_frame/chat_header/chat_header"
+import Drawer from "@/components/chat_frame/drawer/drawer"
 import ChatSendBox from "@/components/chat_frame/chat_sendBox/chat_sendBox"
 import { mapState, mapGetters, mapActions } from "vuex"
 export default {
@@ -90,6 +92,7 @@ export default {
       ops: Ops,
       nowList: [],
       userInfo: {},
+      drawerShow: false,
       emojiShow: false,
       audioShow: false,
       btn_List: [
@@ -155,9 +158,10 @@ export default {
     allHideBox: function() {
       this.emojiShow = false
       this.audioShow = false
+      this.drawerShow = false
     },
     playAudio: function(src) {
-      console.log(src);
+      console.log(src)
       let armRec = new BenzAMRRecorder()
       armRec.initWithUrl(src).then(function() {
         armRec.play()
@@ -167,7 +171,8 @@ export default {
   },
   components: {
     ChatHeader,
-    ChatSendBox
+    ChatSendBox,
+    Drawer
   }
 }
 </script>

@@ -1,15 +1,15 @@
 <template>
   <div class="emoji-Bigbox">
-      <vue-scroll :ops="ops">
-        <div
-          class="emoji-box"
-          v-for="(item, index) in emoji_icon"
-          :key="index"
-          @click="pickEmoji(index)"
-        >
-          {{ item }}
-        </div>
-      </vue-scroll>
+    <vue-scroll :ops="ops">
+      <div
+        class="emoji-box"
+        v-for="(item, index) in emoji_icon"
+        :key="index"
+        @click="pickEmoji(index)"
+      >
+        {{ item }}
+      </div>
+    </vue-scroll>
   </div>
 </template>
 <script>
@@ -387,8 +387,8 @@ export default {
     pickEmoji(idx) {
       return this.$emit("getemoji", this.emoji_icon[idx])
     },
-    test(){
-      console.log(111);
+    test() {
+      console.log(111)
     }
   }
 }
@@ -406,21 +406,20 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-    .emoji-box {
+  .emoji-box {
     display: inline-block;
     width: 30px;
     height: 30px;
     font-size: 22px;
     // border: 1px solid red;
     text-align: center;
-    transition: all .3s;
+    transition: all 0.3s;
     cursor: pointer;
-    &:hover{
+    &:hover {
       border-radius: 5px;
       // background: rgba(160, 158, 158, 0.39);
       transform: scale(1.5);
     }
   }
-  
 }
 </style>

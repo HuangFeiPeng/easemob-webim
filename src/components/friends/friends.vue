@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-      this.$store.dispatch("getFriendsList")
+    this.$store.dispatch("getFriendsList")
   },
   computed: mapGetters({
     friendList: "onGetFriendsList"
@@ -43,7 +43,6 @@ export default {
       const chatID = this.friendList[idx].name
       const type = 0
       this.$store.dispatch("getUserName", { chatID, type })
-
     }
   }
 }

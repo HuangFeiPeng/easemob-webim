@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-      this.$store.dispatch("getChatroomsList")
+    this.$store.dispatch("getChatroomsList")
   },
   computed: {
     ...mapGetters({ chatRoom: "onGetChatRoomsList" })

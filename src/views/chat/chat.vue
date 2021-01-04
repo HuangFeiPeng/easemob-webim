@@ -23,15 +23,13 @@ export default {
   },
   created() {
     //执行刷新聊天页面取token重新登陆。
-    setTimeout(() => {
-      this.userInfo = Storage.getstorage("userInfo")
-      this.$conn.open({
-        apiUrl: this.$WebIM.config.apiURL,
-        user: this.userInfo.username,
-        accessToken: this.userInfo.token,
-        appKey: this.$WebIM.config.appkey
-      })
-    }, 1000)
+    this.userInfo = Storage.getstorage("userInfo")
+    this.$conn.open({
+      apiUrl: this.$WebIM.config.apiURL,
+      user: this.userInfo.username,
+      accessToken: this.userInfo.token,
+      appKey: this.$WebIM.config.appkey
+    })
   },
 
   components: {

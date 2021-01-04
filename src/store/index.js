@@ -1,9 +1,9 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import chatStore from './chatStore';
-import msgContent from './msgContent';
+import Vue from "vue"
+import Vuex from "vuex"
+import chatStore from "./chatStore"
+import msgContent from "./msgContent"
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
@@ -15,4 +15,4 @@ export default new Vuex.Store({
     chatStore,
     msgContent
   }
-});
+})

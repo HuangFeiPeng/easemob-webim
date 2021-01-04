@@ -1,34 +1,34 @@
 function getUrl() {
   var apiUrl =
     (window.location.protocol === "https:" ? "https:" : "http:") +
-    "//a1.easemob.com";
-  var xmppUrl = "//im-api-v2.easemob.com/ws";
+    "//a1.easemob.com"
+  var xmppUrl = "//im-api-v2.easemob.com/ws"
   if (window.location.href.indexOf("www.test.com") !== -1) {
     apiUrl =
       (window.location.protocol === "https:" ? "https:" : "http:") +
-      "//a1.easemob.com";
+      "//a1.easemob.com"
     xmppUrl =
       (window.location.protocol === "https:" ? "https:" : "http:") +
-      "//im-api-v2.easemob.com/ws";
+      "//im-api-v2.easemob.com/ws"
   } else if (window.location.href.indexOf("172.17.1.95") !== -1) {
     apiUrl =
       (window.location.protocol === "https:" ? "https:" : "http:") +
-      "//a1.easemob.com";
+      "//a1.easemob.com"
     xmppUrl =
       (window.location.protocol === "https:" ? "https:" : "http:") +
-      "//im-api-v2.easemob.com/ws";
+      "//im-api-v2.easemob.com/ws"
   } else if (window.location.href.indexOf("localhost") !== -1) {
     apiUrl =
       (window.location.protocol === "https:" ? "https:" : "http:") +
-      "//a1.easemob.com";
+      "//a1.easemob.com"
     xmppUrl =
       (window.location.protocol === "https:" ? "https:" : "http:") +
-      "//im-api-v2.easemob.com/ws";
+      "//im-api-v2.easemob.com/ws"
   }
   return {
     apiUrl: apiUrl,
     xmppUrl: xmppUrl
-  };
+  }
 }
 
 var config = {
@@ -54,6 +54,6 @@ var config = {
   delivery: false, // 是否发送已读回执
 
   useOwnUploadFun: true // 是否使用自己的上传方式（如将图片文件等上传到自己的服务器，构建消息时只传url）
-};
+}
 
-export default config;
+export default config

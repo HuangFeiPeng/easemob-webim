@@ -15,30 +15,30 @@
 </template>
 
 <script>
-import "./setting.scss";
-import Modal from "@/components/modal-box/modal-box";
-import Storage from '@/utils/storage';
-console.log(Storage);
+import "./setting.scss"
+import Modal from "@/components/modal-box/modal-box"
+import Storage from "@/utils/storage"
+console.log(Storage)
 export default {
   data() {
     return {
       modalTitle: "设置",
       isShow: false
-    };
+    }
   },
   methods: {
-   async logOut(){
-     await this.$conn.close();
-      this.isShow = false;
-     await Storage.clearstorage('userInfo');
-      let initStore = Storage.getstorage('initeStore');
+    async logOut() {
+      await this.$conn.close()
+      this.isShow = false
+      await Storage.clearstorage("userInfo")
+      let initStore = Storage.getstorage("initeStore")
       let nowStore = this.$store.state
-     await Object.assign(nowStore,initStore)
-      console.log('>>>>>nowStore',nowStore);
+      await Object.assign(nowStore, initStore)
+      console.log(">>>>>nowStore", nowStore)
     }
   },
   components: {
-    Modal,
-  },
-};
+    Modal
+  }
+}
 </script>
