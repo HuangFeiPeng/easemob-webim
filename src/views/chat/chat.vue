@@ -21,7 +21,7 @@ export default {
       data: {}
     }
   },
-  created() {
+ created() {
     //执行刷新聊天页面取token重新登陆。
     this.userInfo = Storage.getstorage("userInfo")
     this.$conn.open({
@@ -30,6 +30,7 @@ export default {
       accessToken: this.userInfo.token,
       appKey: this.$WebIM.config.appkey
     })
+    setTimeout(()=>{this.$store.dispatch('getUserBlackList')},500)
   },
 
   components: {

@@ -136,10 +136,10 @@ conn.listen({
   onError: function(message) {
     console.log(">>>>onError", message)
   }, //失败回调
-  // onBlacklistUpdate: function (list) { //黑名单变动
-  //     // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
-  //     console.log(list);
-  // },
+  onBlacklistUpdate: function (list) { //黑名单变动
+      // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
+      console.log(list);
+  },
   onRecallMessage: function(message) {
     console.log(">>>>收到消息撤回的回调", message)
   }, //收到撤回消息回调

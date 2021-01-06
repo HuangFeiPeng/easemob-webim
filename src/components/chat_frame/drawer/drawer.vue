@@ -2,25 +2,63 @@
   <div class="drawer_box">
     <h3>好友设置</h3>
     <div class="singleChat_drawer" v-if="detail_type === 'singleChat'">
-      <div class="deleteFriend_btn" @click="removeFriends">
+      <div
+        class="deleteFriend_btn"
+        @click="
+          isShow = true
+          modalType = 0
+        "
+      >
         删除好友
       </div>
-      <div class="addBlackFriend_btn">
+      <div
+        class="addBlackFriend_btn"
+        @click="
+          isShow = true
+          modalType = 1
+        "
+      >
         加入黑名单
       </div>
     </div>
     <GroupDetail v-else-if="detail_type === 'groupChat'"></GroupDetail>
+    <Modal :modalTitle="modalTitle" v-if="isShow" class="friendModal">
+      <div slot="modal-content" class="freiendText">
+        <!-- <div class="concel" @click="isShow = false">x</div> -->
+        <p class="text" v-if="modalType === 0">
+          是否要删除好友 {{ friendId }} ？
+          <br />
+          三思啊 😭
+        </p>
+        <p class="text" v-else-if="modalType === 1">
+          确定要将 {{ friendId }} 送进小黑屋？
+          <br />
+          再考虑考虑？
+        </p>
+      </div>
+      <div slot="modal-footer" class="btn-box" v-if="modalType === 0">
+        <button @click="isShow = false" class="not_btn">取消</button>
+        <button @click="removeFriends" class="yes_btn">删除</button>
+      </div>
+      <div slot="modal-footer" class="btn-box" v-if="modalType === 1">
+        <button @click="isShow = false" class="not_btn">取消</button>
+        <button @click="addBlackList" class="yes_btn">加入</button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import "./drawer.scss"
 import GroupDetail from "./group_detail/group_detail"
-import { mapState, mapActions,mapMutations } from "vuex"
+import Modal from "@/components/modal-box/modal-box"
+import { mapState, mapActions, mapMutations } from "vuex"
 export default {
   data() {
     return {
-      text: "抽屉"
+      modalTitle: "好友操作",
+      isShow: false,
+      modalType: 0 //0删除好友 、1加入黑名单
     }
   },
   computed: mapState({
@@ -28,15 +66,28 @@ export default {
     friendId: state => state.chatStore.userInfo.userId
   }),
   methods: {
-    ...mapActions(["getFriendsList"]),
+    ...mapActions(["getFriendsList", "getUserBlackList"]),
+    //删除好友操作
     removeFriends() {
-      this.$conn.deleteContact(this.friendId);
-      this.getFriendsList();
-      this.$store.commit('initUserInfo')
+      this.$conn.deleteContact(this.friendId)
+      this.getFriendsList()
+      this.$store.commit("initUserInfo")
+      this.isShow = false
+    },
+    //拉黑操作
+    addBlackList() {
+      this.$conn.addToBlackList({
+        name: [this.friendId]
+      })
+      this.getUserBlackList()
+      this.getFriendsList()
+      this.$store.commit("initUserInfo")
+      this.isShow = false
     }
   },
   components: {
-    GroupDetail //群组详情数据组件
+    GroupDetail, //群组详情数据组件
+    Modal
   }
 }
 </script>

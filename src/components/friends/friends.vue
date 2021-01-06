@@ -14,7 +14,7 @@
             @click="goStart(index)"
           >
             <span class="iconfont icon-yonghu"></span>
-            <p :title="item.subscription">{{ item.name }}</p>
+            <p>{{ item.name }}</p>
           </div>
         </vue-scroll>
       </div>
@@ -22,9 +22,9 @@
   </transition>
 </template>
 <script>
+let that
 import { mapGetters } from "vuex"
 import Ops from "@/utils/scrollConfig"
-console.log(">>>>", Ops)
 export default {
   data() {
     return {
@@ -32,17 +32,31 @@ export default {
       msgType: 0
     }
   },
-  created() {
-    this.$store.dispatch("getFriendsList")
+  beforeCreate() {
+    that = this
   },
-  computed: mapGetters({
-    friendList: "onGetFriendsList"
-  }),
+  async created() {
+    await this.$store.dispatch("getFriendsList")
+  },
+  computed: {
+    ...mapGetters({
+      friendList: "onGetFriendsList",
+      blackUser: "onGetBlackUserList"
+    }),
+    in() {
+      return this.friendList.filter(item => {
+        var historyMSG = this.blackUser
+        if (historyMSG && !historyMSG.includes(item.name)) {
+          return item
+        }
+      })
+    }
+  },
   methods: {
     goStart(idx) {
-      const chatID = this.friendList[idx].name
+      const chatID = that.friendList[idx].name
       const type = 0
-      this.$store.dispatch("getUserName", { chatID, type })
+      that.$store.dispatch("getUserName", { chatID, type })
     }
   }
 }

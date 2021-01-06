@@ -13,7 +13,7 @@
     </Modal>
   </div>
 </template>
-
+ 
 <script>
 import "./setting.scss"
 import Modal from "@/components/modal-box/modal-box"
