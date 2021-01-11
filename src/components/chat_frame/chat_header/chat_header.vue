@@ -49,7 +49,7 @@ export default {
   height: 50px;
   h3 {
     display: inline-block;
-    width: 300px;
+    // width: 300px;
     margin-left: 50px;
     line-height: 50px;
     font-weight: 700;

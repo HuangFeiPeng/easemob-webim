@@ -3386,15 +3386,15 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-easemob-webrtc@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/easemob-webrtc/-/easemob-webrtc-3.2.2.tgz#03e46093cb0ce4168bddf23e61069ed6bfe221af"
-  integrity sha512-uScTb2kLKH3pST/eDpjuSFGL+EYpEnogWaRw7Tsyl7b+kEQQZ2xtleIoIunCCZqSCattPBnZ1evDY+7J/wiYfw==
+easemob-webrtc@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/easemob-webrtc/-/easemob-webrtc-3.4.1.tgz#c9fe4be652d7a5bbe1b53237073b20e1cc492687"
+  integrity sha512-LmGY2RAgxjXjRrz9gNLAkiz0seovUpxcLMhXabx+nb4bfpgp2ArA8ToB6YKeFvGmXXqINHyQatj91aZBfk9sHA==
 
-easemob-websdk@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.4.0.tgz#2118a3a1ec9115ada07fc79c5b11c67732d723e8"
-  integrity sha512-3LQbBOrfWpvDpA0WvbxQmQELzjsSVDxrTNyP5mdBSNfj3XE6jMEFt95xw7lpfEHjmMM3fvtHd+6OOOi2YHyThg==
+easemob-websdk@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.4.2.tgz#425c0107daa650e01e87911cee50d1e3583bbadb"
+  integrity sha512-751+97U6HEUZTfYykmsgL2RJhTU0UacaS2PcPjNXaARXcbTB4hjTEQvkDVXmc4gFGMVruz/pfzs9H7+z78mAVw==
 
 easy-stack@^1.0.0:
   version "1.0.0"

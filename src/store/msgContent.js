@@ -1,4 +1,7 @@
 import WebIM from "@/utils/WebIM.js"
+import {
+  Object
+} from "core-js"
 // import Storage from '../utils/storage'
 // const loginInfo = Storage.getstorage("userInfo")
 const conn = WebIM.conn
@@ -89,27 +92,21 @@ function msgGroup(state, chatType, data) {
 // }
 
 function addNowMsg(data) {
+  //存放他人ID
   let otherId = ""
+  //处理如果是自己发送的消息otherID就为data.to，否则的话就是data.from。
   data.right ? (otherId = data.to) : (otherId = data.from)
+  //存放选中的当前人ID
   let pickNowHxId = window.Vue.$store.state.chatStore.userInfo
+  //如果要提交的消息type为单聊类型，并且otherId为当前选中的ID那么就把该条消息retun，否则就retun为未读消息。
   if (data.chatType === "singleChat") {
     if (otherId == pickNowHxId.userId) {
-      return data
-    } else {
-      return {
-        isRead: true,
-        data
-      }
+      return `${conn.user}-${otherId}`
     }
   }
   if (data.chatType === "groupChat" || data.chatType === "chatRoom") {
     if (data.to == pickNowHxId.userId) {
-      return data
-    } else {
-      return {
-        isRead: true,
-        data
-      }
+      return `${conn.user}-${data.to}`
     }
   }
 }
@@ -123,14 +120,15 @@ const msgContent = {
       chatRoom: {}
     },
     //存放当前联系人的消息
-    nowMsgList: [],
-    unReadMsgList: []
+    nowMsgList: []
   },
   mutations: {
     //向消息List当中添加一条new消息
     addNewMessage: (state, payload) => {
-      const { data, chatType } = payload
-      console.log(">>>>>添加一条新消息", data)
+      const {
+        data,
+        chatType
+      } = payload
 
       switch (chatType) {
         case "singleChat":
@@ -140,13 +138,17 @@ const msgContent = {
             data
           )
           var result = addNowMsg(data.msgContent)
-          if (result.isRead != true) {
-            state.nowMsgList.push(result)
-          } else if (result.isRead) {
-            // console.log(result);
-            state.unReadMsgList.push(result.data)
+          // if (result.isRead != true) {
+          //   console.log('>>>>拿到',state);
+          //   let getNowMsgs = state.msgList[chatType][result];
+          //   console.log('>>>>>>getNowMsgs',getNowMsgs);
+          //   // state.nowMsgList.push(result)
+          if (result) {
+            var getNowMsgs = state.msgList[chatType][result];
+            state.nowMsgList = getNowMsgs;
+            console.log('>>>>>>getNowMsgs', getNowMsgs);
           }
-          console.log(result)
+
 
           break
         case "groupChat":
@@ -156,11 +158,14 @@ const msgContent = {
             data
           )
           var resultGroup = addNowMsg(data.msgContent)
-          if (resultGroup.isRead != true) {
-            state.nowMsgList.push(resultGroup)
-          } else if (resultGroup.isRead) {
-            state.unReadMsgList.push(resultGroup.data)
+          if (resultGroup) {
+            var getNowGroupMsgList = state.msgList[chatType][resultGroup];
+            // console.log('>>>>>>>getNowGroupMsgList',getNowGroupMsgList);
+            state.nowMsgList = getNowGroupMsgList
           }
+
+          console.log('>>>>>>resultGroup', resultGroup);
+
           break
         case "chatRoom":
           state.msgList[chatType] = msgGroup(
@@ -169,11 +174,10 @@ const msgContent = {
             data
           )
           var resultChatRoom = addNowMsg(data.msgContent)
-          if (resultChatRoom.isRead != true) {
-            state.nowMsgList.push(resultChatRoom)
-          } else if (resultChatRoom.isRead) {
-            state.unReadMsgList.push(resultChatRoom.data)
-          }
+          console.log('>>>>>>resultChatRoom',resultChatRoom);
+          var getNoWRoomMsgList = state.msgList[chatType][resultChatRoom];
+          console.log('>>>>>>>getNoWRoomMsgList',getNoWRoomMsgList);
+          state.nowMsgList = getNoWRoomMsgList
           break
         default:
           break
@@ -181,19 +185,30 @@ const msgContent = {
     },
     //将获取到的当前联系人的消息往来添加进nowMsgList
     addNowMessage: (state, payload) => {
-      state.nowMsgList = payload || []
+      console.log('>>>>>触发添加nowMsgList', payload);
+      state.nowMsgList = payload
+      // state.nowMsgList.push(payload);
     }
   },
   actions: {
     //获取当前联系人的聊天消息
     getNowMsg: (context, step) => {
-      console.log(">>>>>触发获取当前联系人的历史消息", step)
-      const { myID, overID, type } = step
+      const {
+        myID,
+        overID,
+        type
+      } = step
       if (myID && overID !== "") {
         var key = `${myID}-${overID}`
         console.log(key)
-        var msgBody = context.state.msgList[type][key]
-        context.commit("addNowMessage", msgBody)
+        var msgBody = context.state.msgList[type][key] || []
+        if (msgBody.length != 0) {
+          console.log('>>>>提交');
+          context.commit("addNowMessage", msgBody)
+        } else {
+          context.commit('addNowMessage', [])
+        }
+
       }
     },
     //发送一条文本消息
@@ -219,7 +234,7 @@ const msgContent = {
         ext: {
           nickname: "张三"
         }, //扩展消息
-        success: function(id, serverMsgId) {
+        success: function (id, serverMsgId) {
           console.log("send private text Success", id, serverMsgId)
           context.commit("addNewMessage", {
             data: {
@@ -229,7 +244,7 @@ const msgContent = {
             chatType: step.type
           })
         }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
-        fail: function(e) {
+        fail: function (e) {
           console.log("Send private text error", e)
         } // 对失败的相关定义，sdk会将消息id登记到日志进行备份处理
       })
@@ -265,7 +280,7 @@ const msgContent = {
         customExts,
         chatType: step.type,
         ext: {}, // 消息扩展
-        success: function(id, serverMsgId) {
+        success: function (id, serverMsgId) {
           context.commit("addNewMessage", {
             data: {
               msgContent,
@@ -274,7 +289,7 @@ const msgContent = {
             chatType: step.type
           })
         },
-        fail: function(e) {
+        fail: function (e) {
           console.log(">>>自定义消息发送失败", e)
         }
       })
@@ -313,17 +328,17 @@ const msgContent = {
           },
           to: to, // 接收消息对象
           chatType: type, // 聊天类型
-          onFileUploadError: function(e) {
+          onFileUploadError: function (e) {
             // 消息上传失败
             console.log("onFileUploadError", e)
           },
-          onFileUploadComplete: function(res) {
+          onFileUploadComplete: function (res) {
             // 消息上传成功
             console.log("onFileUploadComplete", res)
             var imgUrl = `${res.uri}/${res.entities[0].uuid}` //拼接图片URL
             return (msgUrl = imgUrl)
           },
-          success: function(id, serverMsgId) {
+          success: function (id, serverMsgId) {
             // 消息发送成功
             console.log("Success", serverMsgId)
             const msgContent = {
@@ -354,7 +369,7 @@ const msgContent = {
 
             // console.log('>>>>>>',msgData);
           },
-          fail: function(e) {
+          fail: function (e) {
             console.log("Fail", e) //如禁言、拉黑后发送消息会失败
           },
           flashUpload: WebIM.flashUpload
@@ -366,7 +381,13 @@ const msgContent = {
     //发送文件消息
     sendFilesMsg: (context, step) => {
       // console.log('>>>>文件消息', context, step);
-      const { to, type, contentsType, Dom, fileInfo } = step
+      const {
+        to,
+        type,
+        contentsType,
+        Dom,
+        fileInfo
+      } = step
       // var fileName = Dom.value.split('\\')[2] // “\”是转义 所以要截取单斜杠 为\\
       var fileName = fileInfo.name // “\”是转义 所以要截取单斜杠 为\\
       console.log(">>>>>拿到文件的信息", fileInfo)
@@ -395,17 +416,17 @@ const msgContent = {
           file: file,
           to: to, // 接收消息对象
           chatType: type, // 设置聊天类型
-          onFileUploadError: function() {
+          onFileUploadError: function () {
             // 消息上传失败
             console.log("onFileUploadError")
           },
-          onFileUploadComplete: function(res) {
+          onFileUploadComplete: function (res) {
             // 消息上传成功
             console.log(">>>>>文件上传成功", res)
             var fileUrl = `${res.uri}/${res.entities[0].uuid}` //拼接URL
             return (msgUrl = fileUrl)
           },
-          success: function(id, serverMsgId) {
+          success: function (id, serverMsgId) {
             // 消息发送成功
             console.log("Success")
             const msgContent = {
@@ -435,7 +456,7 @@ const msgContent = {
             })
             Dom.value = null
           },
-          fail: function(e) {
+          fail: function (e) {
             console.log("Fail") //如禁言、拉黑后发送消息会失败
           },
           flashUpload: WebIM.flashUpload,
@@ -449,7 +470,12 @@ const msgContent = {
     },
     //发送音频消息
     sendAudioMsg: (context, step) => {
-      const { to, type, contentsType, file } = step
+      const {
+        to,
+        type,
+        contentsType,
+        file
+      } = step
       var msgUrl
       console.log(">>>>>>>接收到传入store的音频", step)
       let id = conn.getUniqueId() // 生成本地消息id
@@ -459,11 +485,11 @@ const msgContent = {
         length: file.voiceTime, // 音频文件时长，单位(s)
         to: to, // 接收消息对象
         chatType: type, // 设置单聊
-        onFileUploadError: function() {
+        onFileUploadError: function () {
           // 消息上传失败
           console.log("onFileUploadError")
         },
-        onFileUploadComplete: function(res) {
+        onFileUploadComplete: function (res) {
           // 消息上传成功
           console.log("onFileUploadComplete", res)
           var fileUrl = `${res.uri}/${res.entities[0].uuid}` //拼接URL
@@ -471,7 +497,7 @@ const msgContent = {
           // console.log('>>>>>get到地址',blobUrl);
           return (msgUrl = fileUrl)
         },
-        success: function(id, serverMsgId) {
+        success: function (id, serverMsgId) {
           // 消息发送成功
           console.log("Success")
           const msgContent = {
@@ -499,7 +525,7 @@ const msgContent = {
             chatType: type
           })
         },
-        fail: function(e) {
+        fail: function (e) {
           console.log("Fail", e) //如禁言、拉黑后发送消息会失败
         },
         flashUpload: WebIM.flashUpload,

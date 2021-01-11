@@ -1,6 +1,7 @@
 <template>
   <div class="drawer_box">
-    <h3>好友设置</h3>
+    <!-- 好友详情板块 -->
+    <h3 ref="title" v-if="detail_type === 'singleChat'">好友设置</h3>
     <div class="singleChat_drawer" v-if="detail_type === 'singleChat'">
       <div
         class="deleteFriend_btn"
@@ -21,7 +22,9 @@
         加入黑名单
       </div>
     </div>
+    <!-- 群组详情板块 -->
     <GroupDetail v-else-if="detail_type === 'groupChat'"></GroupDetail>
+    <!-- 删除 拉黑 模态框 -->
     <Modal :modalTitle="modalTitle" v-if="isShow" class="friendModal">
       <div slot="modal-content" class="freiendText">
         <!-- <div class="concel" @click="isShow = false">x</div> -->
@@ -73,6 +76,7 @@ export default {
       this.getFriendsList()
       this.$store.commit("initUserInfo")
       this.isShow = false
+      this.$refs['title'].innerHTML="该好友已删除。"
     },
     //拉黑操作
     addBlackList() {
@@ -83,6 +87,7 @@ export default {
       this.getFriendsList()
       this.$store.commit("initUserInfo")
       this.isShow = false
+      this.$refs['title'].innerHTML="该好友已进入小黑屋。"
     }
   },
   components: {

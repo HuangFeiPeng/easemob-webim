@@ -51,6 +51,12 @@ conn.listen({
     console.log("收到好友邀请", msg)
   }, // 收到好友邀请
   onContactDeleted: function(msg) {
+        window.Vue.$notify({
+          title: `好友关系解除`,
+          message:`与${msg.from}的好友关系解除`,
+          type: "success"
+        })
+    
     console.log("收到被删除", msg)
   }, // 被删除时回调此方法
   onContactAdded: function(msg) {
@@ -124,7 +130,9 @@ conn.listen({
     }
     WebIM.utils.download.call(conn, option)
   }, //收到视频消息
-  onPresence: function() {}, //处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
+  onPresence: function(msg) {
+    console.log('>>>>>>触发onPresence',msg);
+  }, //处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
   onRoster: function() {}, //处理好友申请
   onInviteMessage: function() {}, //处理群组邀请
   onOnline: function() {
@@ -137,6 +145,7 @@ conn.listen({
     console.log(">>>>onError", message)
   }, //失败回调
   onBlacklistUpdate: function (list) { //黑名单变动
+    
       // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
       console.log(list);
   },

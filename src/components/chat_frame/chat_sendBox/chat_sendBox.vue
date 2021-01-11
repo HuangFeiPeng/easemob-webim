@@ -67,7 +67,6 @@ export default {
   }),
   methods: {
     ...mapActions([
-      "getNowMsg",
       "sendTextMsg",
       "sendCustomMsg",
       "sendImageMsg",

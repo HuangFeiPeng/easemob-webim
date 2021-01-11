@@ -21,7 +21,7 @@ let someFun = {
           time: msg.time,
           right: false
         }
-        console.log(">>>>接收的othermessage", msgContent)
+        // console.log(">>>>接收的othermessage", msgContent)
         window.Vue.$store.commit("addNewMessage", {
           data: {
             msgContent,
@@ -119,7 +119,7 @@ let someFun = {
         break
     }
 
-    console.log(">>>>传入的消息", msg)
+    // console.log(">>>>传入的消息", msg)
   },
   //TO DO 暂时没用到过滤
   filterHTMLTag(msg) {

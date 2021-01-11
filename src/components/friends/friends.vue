@@ -43,14 +43,14 @@ export default {
       friendList: "onGetFriendsList",
       blackUser: "onGetBlackUserList"
     }),
-    in() {
-      return this.friendList.filter(item => {
-        var historyMSG = this.blackUser
-        if (historyMSG && !historyMSG.includes(item.name)) {
-          return item
-        }
-      })
-    }
+    // in() {
+    //   return this.friendList.filter(item => {
+    //     var historyMSG = this.blackUser
+    //     if (historyMSG && !historyMSG.includes(item.name)) {
+    //       return item
+    //     }
+    //   })
+    // }
   },
   methods: {
     goStart(idx) {

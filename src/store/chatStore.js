@@ -83,7 +83,7 @@ const chatStore = {
           let arr = []
           roster.filter(item=>{
             if (blackList && !blackList.includes(item.name)) {
-              console.log(item);
+              // console.log(item);
               return arr.push(item)
             }
             // console.log(item.name);

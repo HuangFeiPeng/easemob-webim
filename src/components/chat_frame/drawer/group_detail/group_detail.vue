@@ -1,5 +1,5 @@
 <template>
-  <div class="groupChat_drawer">
+  <div class="groupChat_drawer" v-if="data[0]">
     <h3>群组信息</h3>
     <div class="box_title">
       <h3>群名称</h3>
@@ -15,58 +15,84 @@
           <div v-if="item.owner">群主{{ item.owner }}</div>
           <div v-if="item.member">群成员{{ item.member }}</div>
         </li>
-        <!-- <li>群主{{ item.owner }}</li> -->
       </ul>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from "vuex"
 export default {
   data() {
     return {
-      data: [
-        {
-          id: "133607439007745",
-          name: "售前支持二群",
-          description: "售前支持群测试二群",
-          membersonly: false,
-          allowinvites: false,
-          maxusers: 200,
-          owner: "hfp",
-          created: 1606816383539,
-          custom: "",
-          mute: false,
-          affiliations_count: 6,
-          affiliations: [
-            {
-              member: "hfp5",
-              joined_time: 1608738730014
-            },
-            {
-              member: "ios-fmy",
-              joined_time: 1607078135857
-            },
-            {
-              member: "wyfnszgr",
-              joined_time: 1607077798977
-            },
-            {
-              member: "pfh",
-              joined_time: 1606816522529
-            },
-            {
-              member: "13031081380",
-              joined_time: 1606816406453
-            },
-            {
-              owner: "hfp",
-              joined_time: 1606816383565
-            }
-          ],
-          public: true,
-          shieldgroup: false
-        }
-      ]
+      data: [],
+      announcement: "",
+      adminList: [],
+      allMuteList:[],
+      allBlackList:[]
+    }
+  },
+  created() {
+    this.getGroupInfo()
+    this.getGroupAdmin()
+    // this.getGroupMuteList()
+    // this.getGroupBlackList()
+  },
+  computed: mapState({
+    groupId: state => state.chatStore.userInfo.userId
+  }),
+  watch: {
+    groupId() {
+      this.getGroupInfo()
+    }
+  },
+  methods: {
+    async getGroupInfo() {
+      let options = {
+        groupId: this.groupId // 群组id
+      }
+      //拉取群组详情
+      await this.$conn.getGroupInfo(options).then(res => {
+        console.log(res)
+        this.data = res.data
+      })
+
+      //拉取群公告
+      let parmes = {
+        groupId: this.groupId // 群组id
+      }
+      await this.$conn.fetchGroupAnnouncement(parmes).then(res => {
+        console.log(res)
+        this.announcement = res.data.announcement
+      })
+    },
+    getGroupAdmin() {
+      //拉取群管理员
+      let setting = {
+        groupId: this.groupId // 群组id
+      }
+      this.$conn.getGroupAdmin(setting).then(res => {
+        // console.log(res.data)
+        this.adminList = res.data
+      })
+    },
+    getGroupMuteList() {
+      let options = {
+        groupId: this.groupId // 群组ID
+      }
+      this.$conn.getMuted(options).then(res => {
+        console.log(">>>>禁言列表", res)
+        this.allMuteList = res.data;
+      })
+    },
+    getGroupBlackList() {
+      // 获取群组黑名单
+      let option = {
+        groupId: this.groupId
+      }
+      this.$conn.getGroupBlacklistNew(option).then(res => {
+        console.log('>>>>>获取黑名单',res)
+        this.allBlackList = res.data;
+      })
     }
   }
 }

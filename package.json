@@ -10,8 +10,8 @@
   "dependencies": {
     "benz-amr-recorder": "^1.1.2",
     "core-js": "^3.6.5",
-    "easemob-webrtc": "^3.2.2",
-    "easemob-websdk": "^3.4.0",
+    "easemob-webrtc": "^3.4.1",
+    "easemob-websdk": "^3.4.2",
     "element-ui": "^2.14.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
