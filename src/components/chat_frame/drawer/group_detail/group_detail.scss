@@ -1,0 +1,48 @@
+.groupChat_drawer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .group_Info,.groupMem_Info{
+        border-radius: 10px;
+        padding: 0 5px;
+    }
+    .group_Info{
+        background: rgba(160, 156, 156, 0.466);
+        height: 150px;
+        .group_title{
+            display: flex;
+            width: 80%;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            .groupChangeInfo_btn{
+                img{
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+        }
+        .group_main{
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            .group_description{
+                font-size: 13px;
+            }
+            .announcement{
+                height: 100px;
+                padding: 5px 5px;
+                border-radius: 3px;
+                font-size: 8px;
+                background: rgba(0, 0, 0, 0.082);
+                // overflow: scroll-y;
+            }
+        }
+
+    }
+    .groupMem_Info{
+        margin-top: 20px;
+        height: 100px;
+        background: rgba(160, 156, 156, 0.466);
+    }
+}

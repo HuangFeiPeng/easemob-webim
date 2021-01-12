@@ -68,6 +68,12 @@ export default {
     detail_type: state => state.chatStore.userInfo.type,
     friendId: state => state.chatStore.userInfo.userId
   }),
+  watch: {
+    friendId(){
+      //监听ID变化详情框关闭。
+      this.$parent.drawerShow = false
+    }
+  },
   methods: {
     ...mapActions(["getFriendsList", "getUserBlackList"]),
     //删除好友操作

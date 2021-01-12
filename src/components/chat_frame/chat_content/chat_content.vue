@@ -65,7 +65,7 @@
         </div>
       </vue-scroll>
     </div>
-    <Drawer v-if="drawerShow" />
+    <Drawer v-if="drawerShow" :drawerHide.sync="drawerShow" />
     <ChatSendBox
       v-show="userInfo.userId"
       :btnList="btn_List"
@@ -153,6 +153,7 @@ export default {
     downLoadFile(data, a) {
       this.$refs["dowload"][0].click()
       console.log("点击下载成功", data)
+  
     },
     //点击body隐藏表情框以及录音框
     allHideBox: function() {
@@ -161,7 +162,6 @@ export default {
       this.drawerShow = false
     },
     playAudio: function(src) {
-      console.log(src)
       let armRec = new BenzAMRRecorder()
       armRec.initWithUrl(src).then(function() {
         armRec.play()

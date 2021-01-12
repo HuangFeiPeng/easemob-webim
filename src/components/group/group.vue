@@ -45,7 +45,8 @@ export default {
       const chatName = this.groupList[idx].groupname
       const type = 1
       this.$store.dispatch("getUserName", { chatID, chatName, type })
-    }
+      
+    },
   }
 }
 </script>

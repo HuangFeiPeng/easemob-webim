@@ -65,9 +65,9 @@ const chatStore = {
     },
     actions: {
       //调用获取黑名单列表
-      getUserBlackList: context => {
+    getUserBlackList: context => {
         WebIM.conn.getBlacklist().then((res)=>{
-          console.log('>>>>>>获取黑名单成功',res);
+          // console.log('>>>>>>获取黑名单成功',res);
           context.commit('loadBlackList',res.data)
         })
       // console.log(res);
@@ -88,7 +88,7 @@ const chatStore = {
             }
             // console.log(item.name);
           })
-          console.log(arr);
+          // console.log(arr);
           context.commit("loadList", {
             type: "friendsList",
             data: arr
