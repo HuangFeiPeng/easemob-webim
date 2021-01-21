@@ -1,7 +1,4 @@
 import WebIM from "@/utils/WebIM.js"
-import {
-  Object
-} from "core-js"
 // import Storage from '../utils/storage'
 // const loginInfo = Storage.getstorage("userInfo")
 const conn = WebIM.conn

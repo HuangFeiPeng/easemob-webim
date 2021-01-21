@@ -1,6 +1,7 @@
 import websdk from "easemob-websdk"
 import config from "./WebIMConfig"
 import someFun from "./function"
+import getNowdate from './getTime';
 
 var conn = {}
 var WebIM = {}
@@ -69,13 +70,11 @@ conn.listen({
     console.log(">>>好友请求被同意", msg)
   }, // 好友请求被同意
   onTextMessage: function(msg) {
-    console.log(msg)
     someFun.otherMsg(msg)
     // someFun(msg)
   }, //收到文本消息
   onEmojiMessage: function() {}, //收到表情消息
   onPictureMessage: function(msg) {
-    console.log(msg)
     someFun.otherMsg(msg)
   }, //收到图片消息
   onCmdMessage: function() {}, //收到命令消息

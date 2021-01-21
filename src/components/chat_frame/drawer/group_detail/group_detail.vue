@@ -8,7 +8,6 @@
           <p class="groupName" v-if="data.name && data.affiliations_count">
             {{ data.name }}{{ `(${data.affiliations_count})` }}
           </p>
-          <br />
           <!-- 修改群组信息 -->
           <span class="groupChangeInfo_btn" v-if="roleNum.num == 0">
             <img src="@/assets/image/修改.png" title="修改群组信息" />
@@ -18,13 +17,19 @@
         </div>
         <div class="group_main">
           <div class="group_description">
-            <p>群组描述：{{ data.description }}</p>
+            <!-- <p>群组描述：{{ data.description }}</p> -->
+            <span :title="data.description"
+              >群详情：{{ data.description }}</span
+            >
           </div>
-          <div class="announcement" v-text="announcement ?announcement:'暂无群公告...'">
-            
-          </div>
-          <div class="group_files">
-            群文件
+          <!-- 群公告 -->
+          <div class="group_announcement">
+            <vue-scroll :ops="ops" ref="vs">
+              <span v-if="announcement">
+                {{ announcement }}
+              </span>
+              <span v-else>暂无群公告...</span>
+            </vue-scroll>
           </div>
         </div>
       </vue-scroll>
@@ -34,10 +39,32 @@
     <div class="groupMem_Info">
       <vue-scroll :ops="ops" ref="vs">
         <div class="box_main">
-          <ul>
-            <li v-for="(item, index) in data.affiliations" :key="index">
-              <div v-if="item.owner">群主{{ item.owner }}</div>
-              <div v-if="item.member">群成员{{ item.member }}</div>
+          <!-- 群成员列表循环 -->
+          <ul class="groupMem_list">
+            <li
+              class="list_data"
+              v-for="(item, index) in data.affiliations"
+              :key="index"
+            >
+              <div v-if="item.owner" class="groupMem_list_owner">
+                <span class="iconfont icon-yonghu"></span>
+                <span>{{ item.owner }}</span>
+              </div>
+              <div v-if="item.member" class="groupMem_list_member">
+                <span class="iconfont icon-yonghu"></span>
+                <span>{{ item.member }}</span>
+              </div>
+              <!-- 群成员管理按钮（禁言、移出、升降管理员） -->
+              <div
+                class="groupMem_setBtn"
+                v-if="roleNum.num == 0 && item.member"
+              >
+                <div :class="[ adminList.includes(item.member)?'notAdmin':'isAdmin']"></div>
+                <div :class="[ allMuteList.includes(item.member)?'notMuteMem':'isMuteMem']"></div>
+                <div class="delMem">
+                  <span class="iconfont icon-exittuichu"></span>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -45,6 +72,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import "./group_detail.scss"
 import { mapState } from "vuex"
@@ -103,9 +131,11 @@ export default {
     await this.getGroupAdmin()
     await this.setRole()
   },
-  computed: mapState({
-    groupId: state => state.chatStore.userInfo.userId
-  }),
+  computed: {
+    ...mapState({
+      groupId: state => state.chatStore.userInfo.userId
+    })
+  },
   watch: {
     groupId() {
       this.getGroupInfo()
@@ -134,7 +164,7 @@ export default {
       }
       //拉取群组详情
       await this.$conn.getGroupInfo(options).then(res => {
-        this.data = res.data[0];
+        this.data = res.data[0]
         this.groupOwner = res.data[0].owner
       })
 

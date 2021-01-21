@@ -1,48 +1,151 @@
-.groupChat_drawer{
+@mixin textEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.groupChat_drawer {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    .group_Info,.groupMem_Info{
+
+    .group_Info,
+    .groupMem_Info {
         border-radius: 10px;
-        padding: 0 5px;
+        padding: 5px;
     }
-    .group_Info{
+
+    .group_Info {
         background: rgba(160, 156, 156, 0.466);
         height: 150px;
-        .group_title{
+
+        .group_title {
             display: flex;
-            width: 80%;
+            width: 100%;
+            height: 25px;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            .groupChangeInfo_btn{
-                img{
+
+            .groupChangeInfo_btn {
+                img {
                     width: 15px;
                     height: 15px;
                 }
             }
         }
-        .group_main{
+
+        .group_main {
             margin-top: 10px;
             display: flex;
             flex-direction: column;
-            .group_description{
+
+            .group_description {
                 font-size: 13px;
+                @include textEllipsis
             }
-            .announcement{
-                height: 100px;
+
+            .group_announcement {
+                height: 65px;
                 padding: 5px 5px;
                 border-radius: 3px;
                 font-size: 8px;
                 background: rgba(0, 0, 0, 0.082);
-                // overflow: scroll-y;
             }
         }
 
     }
-    .groupMem_Info{
+
+    .groupMem_Info {
         margin-top: 20px;
         height: 100px;
         background: rgba(160, 156, 156, 0.466);
+
+        .box_main {
+            .list_data {
+                height: 30px;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+
+                .groupMem_list_owner,
+                .groupMem_list_member {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    span:nth-child(2) {
+                        margin-bottom: 2px;
+                    }
+                }
+                .groupMem_list_owner {
+                    span:nth-child(1) {
+                        color: #FFB540;
+                        font-size: 20px;
+                        font-weight: bold;
+                        margin: 0 5px;
+                    }
+                }
+                .groupMem_list_member {
+                    span:nth-child(1) {
+                        // color: #FFB540;
+                        font-size: 20px;
+                        font-weight: 500;
+                        margin: 0 5px;
+
+                    }
+                }
+                .groupMem_setBtn{
+                    // height: 1em;
+                    // margin-left: px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-around;
+                    align-items: center;
+                    // background: #000;
+                    div{
+                        width: 20px;
+                        height: 20px;
+                        margin: 0 5px;
+                        // background: rgb(255, 6, 6);
+                    }
+                    .isAdmin{
+                        background-size: contain;
+                        background-image: url("../../../../assets/image/管理员认证.png");
+                    }
+                    .notAdmin{
+                        background-size: 75% 75%;
+                        background-image: url("../../../../assets/image/降级.png");
+                        background-repeat: no-repeat;
+                        background-position: 4px;
+                    }
+                    //禁言
+                    .isMuteMem{
+                        background-size: cover;
+                        background-image: url("../../../../assets/image/禁言.png");
+                    }
+                    //解禁
+                    .notMuteMem{
+                        background-size: cover;
+                        background-image: url("../../../../assets/image/解禁.png");
+                    }
+                    .delMem{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+                    .delMem>span{
+                        color: #2b2a2ac7;
+                        font-size: 16px;
+                    }
+                    
+                }
+                &:hover {
+                    background: rgba(160, 156, 156, 0.781);
+                }
+            }
+        }
     }
 }
