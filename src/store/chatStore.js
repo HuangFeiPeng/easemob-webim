@@ -37,6 +37,7 @@ const chatStore = {
           chatName,
           type
         } = playload
+  
         state.userInfo.userId = chatID
         state.userInfo.userName = chatName
         state.userInfo.type = state.msgType[type]
