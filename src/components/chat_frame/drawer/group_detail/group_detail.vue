@@ -88,6 +88,7 @@
                     adminList.includes(item.member) ? 'notAdmin' : 'isAdmin'
                   ]"
                   @click="setAdmin(item.member)"
+                  title="管理员操作"
                 ></div>
                 <!-- 禁言成员 -->
                 <div
@@ -97,6 +98,7 @@
                       : 'isMuteMem'
                   ]"
                   @click="setMuteMem(item.member)"
+                  title="禁言操作"
                 ></div>
                 <!-- 移出成员 -->
                 <div class="delMem">
@@ -107,6 +109,7 @@
                       modalType = 3
                       nowPickMember = item.member
                     "
+
                   ></span>
                 </div>
               </div>
@@ -265,7 +268,7 @@ export default {
   async created() {
     await this.getGroupInfo()
     await this.getGroupAdmin()
-    await this.setRole()
+    this.setRole(), this.getGroupMuteList()
   },
   computed: {
     ...mapState({
@@ -365,7 +368,13 @@ export default {
         groupId: this.groupId // 群组ID
       }
       this.$conn.getMuted(options).then(res => {
-        this.allMuteList = res.data
+        console.log(">>>>>>禁言列表", res)
+        let arr = []
+        res.data && res.data.forEach(item => {
+          arr.push(item.user)
+          console.log(item.user);
+        })
+        this.allMuteList =arr;
       })
     },
     getGroupBlackList() {
@@ -494,19 +503,21 @@ export default {
       }
     },
     setMuteMem(mem) {
-      let option = {
+      let options = {
         username: mem, // 成员用户名
         muteDuration: -1, // 禁言的时长，单位是毫秒
         groupId: this.groupId
       }
       if (mem && !this.allMuteList.includes(mem)) {
         this.$conn.mute(options).then(res => {
-          console.log('>>>>>>禁言成功',res)
+          console.log(">>>>>>禁言成功", res)
+          this.getGroupMuteList()
         })
       } else {
-        this.$conn.removeMute(options).then((res) => {
-        console.log(res)
-})
+        this.$conn.removeMute(options).then(res => {
+          console.log(res)
+          this.getGroupMuteList()
+        })
       }
       console.log(mem)
     }

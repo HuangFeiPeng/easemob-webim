@@ -332,6 +332,7 @@ const msgContent = {
           onFileUploadComplete: function (res) {
             // 消息上传成功
             console.log("onFileUploadComplete", res)
+            console.log(res);
             var imgUrl = `${res.uri}/${res.entities[0].uuid}` //拼接图片URL
             return (msgUrl = imgUrl)
           },
