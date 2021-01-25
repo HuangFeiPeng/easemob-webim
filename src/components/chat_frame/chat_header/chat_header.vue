@@ -28,12 +28,12 @@ export default {
   },
   methods: {
     showDrawer: function() {
-      console.log(">>>>>>触发")
-      // this.isDrawer = !this.isDrawer
-      console.log(this.drawerHide)
-      return this.drawerHide
-        ? this.$emit("update:drawerHide", false)
-        : this.$emit("update:drawerHide", true)
+      if (this.nowIdInfo.userId || this.nowIdInfo.userName) {
+        return this.drawerHide
+          ? this.$emit("update:drawerHide", false)
+          : this.$emit("update:drawerHide", true)
+      }
+
     }
     // this.drawerHide ?this.$emit("update:drawerHide", false):this.$emit("update:drawerHide", true)
   },
