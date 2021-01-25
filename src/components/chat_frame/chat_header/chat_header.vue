@@ -4,7 +4,7 @@
       <span v-if="nowIdInfo.userName">{{ nowIdInfo.userName }}</span>
       <span v-else>{{ nowIdInfo.userId }}</span>
     </h3>
-    <div class="list_btn" @click="showDrawer">
+    <div class="list_btn" @click="showDrawer" v-if="nowIdInfo.type == 'singleChat' || nowIdInfo.type == 'groupChat'">
       <span class="iconfont icon-liebiao"></span>
     </div>
     <!-- <Drawer v-if="isDrawer"></Drawer> -->
