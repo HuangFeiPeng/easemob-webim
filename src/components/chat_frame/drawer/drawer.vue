@@ -1,4 +1,5 @@
 <template>
+<transition name="slide-fade">
   <div class="drawer_box">
     <!-- 好友详情板块 -->
     <h3 ref="title" v-if="detail_type === 'singleChat'">好友设置</h3>
@@ -49,6 +50,8 @@
       </div>
     </Modal>
   </div>
+</transition>
+  
 </template>
 
 <script>
