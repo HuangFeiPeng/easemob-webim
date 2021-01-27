@@ -5,9 +5,16 @@
       <p class="user_ID" v-if="userID">{{ userID }}</p>
     </div>
     <div class="tabList-box">
-      <div class="tabList">
+      <!-- 跳转至会话列表 -->
+      <keep-alive>
+        <router-link to="/chat/conversation">
+        <div class="tabList">
         <span class="iconfont icon-ziyuan"></span>
       </div>
+      </router-link>
+      </keep-alive>
+      
+      
       <!-- 跳转至好友列表 -->
       <keep-alive>
         <router-link to="/chat/friends">
@@ -32,6 +39,7 @@
           </div>
         </router-link>
       </keep-alive>
+      <!-- 跳转至设置按钮 -->
       <router-link to="/chat/setting">
         <div class="tabList" id="setting-tab">
           <span class="iconfont icon-ziyuan156"></span></div

@@ -37,6 +37,8 @@ conn.listen({
         err
       })
     }
+    //登陆成功获取会话列表
+    window.Vue.$store.dispatch('getConversationList');
   }, //连接成功回调
   onClosed: function() {
     console.log(">>>>环信断开连接")

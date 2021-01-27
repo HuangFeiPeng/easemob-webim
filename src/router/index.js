@@ -19,11 +19,21 @@ const routes = [
   {
     path: "/chat",
     name: "Chat",
+    redirect:'/chat/conversation',//设置重定向路由加载的指向路径，进入chat页面首先选中会话列表
     meta: {
       title: "开始畅聊"
     },
+
     component: () => import("@/views/chat/chat"),
     children: [
+      {
+        path: "conversation",
+        name: "Conversation",
+        meta: {
+          title: "会话列表"
+        },
+        component: () => import("@/components/conversation/conversation")
+      },
       {
         path: "friends",
         name: "Friends",
