@@ -102,7 +102,7 @@ const router = new VueRouter({
 })
 /* 使用路由守卫防止篡改URL地址栏绕过登陆 */
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  // console.log(to)
   if (to.meta.title) {
     document.title = to.meta.title
     next()

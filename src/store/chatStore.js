@@ -4,6 +4,7 @@ function getUserId(str) {
   // console.log('name', str)
   if (typeof str !== 'string') return '';
   return (str.match(/ceshi_(\S*)@|ceshi_(\S*)/)[1] || str.match(/ceshi_(\S*)@|ceshi_(\S*)/)[2])
+  // return (str.match(/ceshi_(\S*)@|chatdemoui(\S*)/)[1] || str.match(/chatdemoui_(\S*)@|chatdemoui_(\S*)/)[2])
 }
 const chatStore = {
   state: {
@@ -60,20 +61,26 @@ const chatStore = {
               data:bodies[0],
               ext:ext,
               from: from,
-              to:to,
-              type: chatType(channel_id)
+              to:to
             },
             timestamp:meta.timestamp,
             to:getUserId(meta.to)
-          }
+          },
+          type: chatType(channel_id),
+          isChannel:true
         }
-        state.conversationList.push(converBody)
-        console.log('>>>>>>>>>处理完的会话列表',state.conversationList[0].id);
+        state.conversationList.push({
+          key:getId,
+          converBody
+        })
       }
       
       // console.log(getId);
       
-
+    },
+    //初始化会话列表
+    inItConversation:(state,payload)=>{
+      state.conversationList = []
     },
     //设置选中ID的基本信息
     chatName: (state, payload) => {
@@ -213,6 +220,9 @@ const chatStore = {
     },
     onGetBlackUserList: state => {
       return state.blackFriendList
+    },
+    onGetConversationList: state =>{
+      return state.conversationList
     }
   }
 }

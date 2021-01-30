@@ -7,6 +7,7 @@ function getNowdate(time) {
   var H = t.getHours() < 10 ? "0" + t.getHours() : t.getHours()
   var F = t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes()
   var S = t.getSeconds() < 10 ? "0" + t.getSeconds() : t.getSeconds()
-  return `${Y}-${M}-${D}-${H}:${F}:${S}`
+  // return `${Y}-${M}-${D}-${H}:${F}:${S}`
+  return `${M}/${D}/${H}:${F}`
 }
 export default getNowdate
