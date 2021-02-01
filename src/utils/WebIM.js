@@ -37,6 +37,7 @@ conn.listen({
         err
       })
     }
+    window.Vue.$store.dispatch('getGroupsList');
     //登陆成功获取会话列表
     window.Vue.$store.dispatch('getConversationList');
   }, //连接成功回调

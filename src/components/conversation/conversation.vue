@@ -19,13 +19,14 @@
             <div class="profile">
               <span
                 class="profile_single"
-                v-if="item.converBody.type === 'singleChat'"
+                v-if="item.converBody.chatType.type === 'singleChat'"
               ></span>
               <span class="profile_group" v-else></span>
             </div>
             <div class="conversation_main">
               <div class="main_title">
-                <span class="username">{{ item.key }}</span>
+                <span class="username" v-if="item.converBody.chatType.type ==='singleChat'">{{ item.key }}</span>
+                <span class="groupname" v-else>{{ item.converBody.chatType.groupName }}</span>
                 <!-- 如果是会话列表拉取的lastMsg使用该方式转时间戳 -->
                 <span class="time" v-if="item.converBody.isChannel">{{
                   changeTime(item.converBody.lastMsg.timestamp)
@@ -98,7 +99,7 @@ export default {
   },
   created() {
     this.changeTime = changeTime
-    this.getconversationList()
+    this.getconversationList();
   },
   computed: {
     ...mapState({
@@ -107,22 +108,32 @@ export default {
   },
   watch: {
     conversationList() {
-      console.log(">>>>>>", 111)
+      // console.log(">>>>>>", 111)
     }
   },
   methods: {
-    ...mapActions(["getConversationList"]),
+    ...mapActions(["getConversationList","getUserName"]),
     getconversationList() {
-      console.log("<<<<<<<<", this.conversationList)
       this.converStation = this.conversationList
     },
+
     startChat(data, idx) {
+      const { chatType,id} = data.converBody;
+      let Type ={
+        singleChat:0,
+        groupChat:1
+      }
+      // console.log(chatType);
+      this.getUserName({
+        chatID:id,
+        chatName:chatType.groupName,
+        type:Type[chatType.type]
+      })
       //点击会话列表的时候如果有未读那么发送channel_ack
       //判断条件为unReadNum大于0的时候发channel_ack
       if (data.converBody.unReadNum > 0) {
         var msg = new this.$WebIM.message("channel", this.$conn.getUniqueId())
-        let { id, type } = data.converBody
-        if (type === "singleChat") {
+        if (chatType.type === "singleChat") {
           msg.set({
             to: id
           })

@@ -1,5 +1,5 @@
 import WebIM from "@/utils/WebIM.js"
-
+//该function为功能为将会话列表的ID截取出来。
 function getUserId(str) {
   // console.log('name', str)
   if (typeof str !== 'string') return '';
@@ -43,43 +43,75 @@ const chatStore = {
     loadConversation: (state, payload) => {
       // console.log(payload);
       if (payload.isChannel) { //如果是通过会话列表接口拉取的数据进入
-        let {channel_id,meta,unread_num} = payload;
-        let chatType = id =>{
-          let idType =id.split("@")
-          return idType[1] && idType[1]==="easemob.com" ? "singleChat" : "groupChat";
-        }
-        let {bodies,ext,from,to} = JSON.parse(meta.payload) //payload的数据转为对象并解构
+        let {
+          channel_id,
+          meta,
+          unread_num
+        } = payload;
+        let {
+          bodies,
+          ext,
+          from,
+          to
+        } = JSON.parse(meta.payload) //payload的数据转为对象并解构
         let getId = channel_id && getUserId(channel_id); //通过截取拿到id
-        // console.log(getId);
-        let converBody = {
-          id:getId,
-          unReadNum: unread_num,
-          lastMsg:{
-            from: getUserId(meta.from),
-            id:meta.id,
-            msgBody:{
-              data:bodies[0],
-              ext:ext,
-              from: from,
-              to:to
-            },
-            timestamp:meta.timestamp,
-            to:getUserId(meta.to)
-          },
-          type: chatType(channel_id),
-          isChannel:true
+        //将channel_id 截取判断其会话类型是单聊还是群聊 或为 聊天室
+        let chatType = id => {
+          let idType = id.split("@")
+          let typeInfo = {
+            type: "",
+            groupName: ""
+          }
+          if (idType[1] === "easemob.com") {
+            typeInfo.type = "singleChat"
+          } else {
+            let groupsList = state.aboutList.groupsList;
+            groupsList && groupsList.forEach((item) => {
+            //查询当前群组列表里面的id，如果getId存在于则为群组，否则则是聊天室（聊天室的话type,groupName都设为了""字符串
+              if (item.groupid === getId) { 
+                return typeInfo = {
+                  type: "groupChat",
+                  groupName: item.groupname
+                }
+              }
+            })
+          }
+          return typeInfo
         }
-        state.conversationList.push({
-          key:getId,
-          converBody
-        })
+        //会话消息构建的body体
+        let converBody = {
+          id: getId,
+          unReadNum: unread_num,
+          lastMsg: {
+            from: getUserId(meta.from),
+            id: meta.id,
+            msgBody: {
+              data: bodies[0],
+              ext: ext,
+              from: from,
+              to: to
+            },
+            timestamp: meta.timestamp,
+            to: getUserId(meta.to)
+          },
+          chatType: chatType(channel_id),
+          isChannel: true //是否是从会话列表拉取出来的
+        }
+        //这一步操作是为了只处理单人以及群组类型的会话上屏显示
+        if (chatType(channel_id).type) {
+          state.conversationList.push({
+            key: getId,
+            converBody
+          })
+        }
+        
       }
-      
+
       // console.log(getId);
-      
+
     },
     //初始化会话列表
-    inItConversation:(state,payload)=>{
+    inItConversation: (state, payload) => {
       state.conversationList = []
     },
     //设置选中ID的基本信息
@@ -120,13 +152,13 @@ const chatStore = {
     //获取会话列表数据
     getConversationList: context => {
       WebIM.conn.getSessionList().then((res) => {
-        console.log('>>>>>>拿到会话列表', res.data.channel_infos);
+        // console.log('>>>>>>拿到会话列表', res.data.channel_infos);
         let allChannel_infos = res.data.channel_infos;
-        allChannel_infos && allChannel_infos.forEach(item =>{
+        allChannel_infos && allChannel_infos.forEach(item => {
           item.isChannel = true; //标明是通过会话列表拿到的消息
-          item && context.commit('loadConversation',item)
+          item && context.commit('loadConversation', item)
         })
-        
+
         // res.data && context.commit('loadConversation',res.data.channel_infos);
       })
     },
@@ -221,7 +253,7 @@ const chatStore = {
     onGetBlackUserList: state => {
       return state.blackFriendList
     },
-    onGetConversationList: state =>{
+    onGetConversationList: state => {
       return state.conversationList
     }
   }

@@ -6,6 +6,7 @@
     <main>
       <router-view></router-view>
     </main>
+    <audio src="../src/assets/MP3/lingsheng.mp3" id="lingsheng"  muted></audio>
   </div>
 </template>
 <script>

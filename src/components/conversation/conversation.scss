@@ -134,6 +134,13 @@
                             @include textEllipsis
                             // background: pink;
                         }
+                        .groupname{
+                            display: inline-block;
+                            font-size: 7px;
+                            width: 100px;
+                            height: 20px;
+                            @include textEllipsis
+                        }
                         .time{
                             width: 50px;
                             font-size: 10px;
