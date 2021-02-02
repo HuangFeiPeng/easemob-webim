@@ -20,7 +20,8 @@
               <span
                 class="profile_single"
                 v-if="item.converBody.chatType.type === 'singleChat'"
-              ></span>
+              >
+              </span>
               <span class="profile_group" v-else></span>
             </div>
             <div class="conversation_main">
@@ -112,7 +113,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getConversationList","getUserName"]),
+    ...mapActions(["getConversationList","getUserName","setTopConversationList"]),
     getconversationList() {
       this.converStation = this.conversationList
     },
@@ -123,7 +124,11 @@ export default {
         singleChat:0,
         groupChat:1
       }
-      // console.log(chatType);
+      //将当前点击的会话li，置顶
+      this.setTopConversationList({
+        conver_index:idx
+      })
+      //将当前点击的会话li，set入userInfo
       this.getUserName({
         chatID:id,
         chatName:chatType.groupName,
