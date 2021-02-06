@@ -87,7 +87,7 @@ function msgGroup(state, chatType, data) {
 //     // console.log('>>>>>>即将抛出的', nowMsg);
 //     // return nowMsg
 // }
-
+//处理添加消息到nowList（消息分发），上面注释的是以前的，现在看写的是什么鬼？
 function addNowMsg(data) {
   //存放他人ID
   let otherId = ""
@@ -108,6 +108,49 @@ function addNowMsg(data) {
   }
 }
 
+//处理新加消息更新会话列表
+//此处设计思路为，如果该条消息在会话中有那么就更改lastMsg，如果没有的话那么就再新增一个会话列表到conversationList里。
+function addConversationList(data) {
+  //拿到当前的会话列表数组
+  const nowConversationList = window.Vue.$store.state.chatStore.conversationList;
+  let converKey = ""; //存放新消息id用作后期新会话的key
+  let nowConverKey = [] //存放所有已有会话列表所有的key
+  if (data.chatType === "singleChat") {
+    data.right ? (converKey = data.to) : (converKey = data.from)
+  } else {
+    console.log('>>>>>>进入了群聊');
+    converKey = data.to
+  }
+  //循环当前已有会话列表，并将其key push 进nowConverKey
+  nowConversationList && nowConversationList.forEach((item, index) => {
+    // item.key === converKey && console.log('>>>>>会话列表里有');
+     nowConverKey.push(item.key)
+  })
+  //为了获取converKey 在数组中的下标
+  let _index = nowConverKey && nowConverKey.findIndex((value)=> value == converKey);
+  console.log(_index);
+  //判断新消息的key是否存在于已有的会话list中
+  if (nowConverKey.includes(converKey)) {
+    console.log('>>>>更新lastMsg');
+    data.converKey = converKey;
+    window.Vue.$store.commit('updataConversation',data);
+    if (_index !==-1 && _index !== 0) {
+      console.log('>>>>>>执行更新lastMsg切置顶');
+      window.Vue.$store.dispatch('setTopConversationList', { conver_index:_index})
+    }
+  } else {
+    data.converKey = converKey;
+    console.log('>>>>>添加一个新的会话列表',window.Vue);
+    window.Vue.$store.commit('loadConversation', data)
+    if (_index !==-1 && _index !== 0) {
+      console.log('>>>>>>执行更新lastMsg切置顶');
+      window.Vue.$store.dispatch('setTopConversationList', { conver_index:_index})
+    }
+  }
+  // console.log('>>>>新消息的key是否存在于会话列表中',); 
+  // console.log('>>>>>>>>>>>>nowConverdationList',converKey,nowConverKey);
+}
+
 const msgContent = {
   state: {
     //所有在线收发消息的存储
@@ -126,7 +169,6 @@ const msgContent = {
         data,
         chatType
       } = payload
-
       switch (chatType) {
         case "singleChat":
           state.msgList[chatType] = msgGroup(
@@ -134,6 +176,7 @@ const msgContent = {
             chatType,
             data
           )
+          addConversationList(data.msgContent)
           var result = addNowMsg(data.msgContent)
           // if (result.isRead != true) {
           //   console.log('>>>>拿到',state);
@@ -145,8 +188,6 @@ const msgContent = {
             state.nowMsgList = getNowMsgs;
             console.log('>>>>>>getNowMsgs', getNowMsgs);
           }
-
-
           break
         case "groupChat":
           state.msgList[chatType] = msgGroup(
@@ -154,15 +195,12 @@ const msgContent = {
             chatType,
             data
           )
+          addConversationList(data.msgContent)
           var resultGroup = addNowMsg(data.msgContent)
           if (resultGroup) {
             var getNowGroupMsgList = state.msgList[chatType][resultGroup];
-            // console.log('>>>>>>>getNowGroupMsgList',getNowGroupMsgList);
             state.nowMsgList = getNowGroupMsgList
           }
-
-          console.log('>>>>>>resultGroup', resultGroup);
-
           break
         case "chatRoom":
           state.msgList[chatType] = msgGroup(
@@ -171,9 +209,7 @@ const msgContent = {
             data
           )
           var resultChatRoom = addNowMsg(data.msgContent)
-          console.log('>>>>>>resultChatRoom',resultChatRoom);
           var getNoWRoomMsgList = state.msgList[chatType][resultChatRoom];
-          console.log('>>>>>>>getNoWRoomMsgList',getNoWRoomMsgList);
           state.nowMsgList = getNoWRoomMsgList
           break
         default:
@@ -537,7 +573,6 @@ const msgContent = {
   },
   getters: {
     onGetMsgList: state => {
-      console.log("......", state)
       return state.nowMsgList
     }
   }

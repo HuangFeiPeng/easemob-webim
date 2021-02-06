@@ -67,8 +67,8 @@ const chatStore = {
           } else {
             let groupsList = state.aboutList.groupsList;
             groupsList && groupsList.forEach((item) => {
-            //查询当前群组列表里面的id，如果getId存在于则为群组，否则则是聊天室（聊天室的话type,groupName都设为了""字符串
-              if (item.groupid === getId) { 
+              //查询当前群组列表里面的id，如果getId存在于则为群组，否则则是聊天室（聊天室的话type,groupName都设为了""字符串
+              if (item.groupid === getId) {
                 return typeInfo = {
                   type: "groupChat",
                   groupName: item.groupname
@@ -104,20 +104,105 @@ const chatStore = {
             converBody
           })
         }
-        
-      }
 
+      } else {
+        const {
+          converKey,
+          from,
+          msgData,
+          contentsType,
+          ext,
+          to,
+          time,
+          chatType
+        } = payload
+        //会话消息构建的body体
+        let changeMsgTyepe = {
+          "TEXT": "txt"
+        }
+        let converBody = {
+          id: converKey,
+          unReadNum: 0,
+          lastMsg: {
+            from: from,
+            id: converKey,
+            msgBody: {
+              data: {
+                msg: msgData,
+                type: changeMsgTyepe[contentsType]
+              },
+              ext: ext,
+              from: from,
+              to: to
+            },
+            timestamp: time,
+            to: to
+          },
+          chatType: {
+            groupName: "",
+            type: chatType
+          }
+
+        }
+        state.conversationList.push({
+          key: converKey,
+          converBody
+        })
+        console.log(payload);
+      }
       // console.log(getId);
 
     },
+    //更新会话列表
+    updataConversation: (state,payload)=>{
+      const {
+        converKey,
+        from,
+        msgData,
+        contentsType,
+        ext,
+        to,
+        time,
+        chatType
+      } = payload
+    console.log(payload);
+    let toBeUpdate = {};
+    let changeMsgTyepe = {
+      "TEXT": "txt"
+    }
+    let newLastMsg = {
+        from: from,
+        id: converKey,
+        msgBody: {
+          data: {
+            msg: msgData,
+            type: changeMsgTyepe[contentsType]
+          },
+          ext: ext,
+          from: from,
+          to: to
+        },
+        timestamp: time,
+        to: to
+    }
+      state.conversationList.forEach(item=>{
+        console.log('>>>>>>更新会话列表',item);
+        if (item.key === converKey && item.converBody.chatType.type === chatType) {
+          return toBeUpdate = item;
+        }
+      })
+      // console.log('>>>>>>>toBeUpdate',toBeUpdate);
+       toBeUpdate.converBody.lastMsg = newLastMsg;
+      // console.log(toBeUpdate);
+
+    },
     //置顶选中会话
-    topConversation:(state,payload) =>{
-      console.log(payload);
-      const { delConver } = payload
+    topConversation: (state, payload) => {
+      const {
+        delConver
+      } = payload
       //将拿到的delConver添加至当前的会话数组的首位，以完成置顶操作
       state.conversationList.unshift(delConver[0])
-      // console.log(arr2);
-
     },
     //初始化会话列表
     inItConversation: (state, payload) => {
@@ -173,13 +258,15 @@ const chatStore = {
       })
     },
     //置顶选中的会话列表
-    setTopConversationList: (context,step) =>{
+    setTopConversationList: (context, step) => {
       //获取当前的state中存放的会话列表
-      let nowConverList =  context.state.conversationList;
+      let nowConverList = context.state.conversationList;
       //拿到splice返回的数组目标
-      let delConver = nowConverList.splice(step.conver_index,1)
+      let delConver = nowConverList.splice(step.conver_index, 1)
       //将删除的目标ID提交给mutations
-      context.commit("topConversation",{delConver})
+      context.commit("topConversation", {
+        delConver
+      })
     },
     //调用获取黑名单列表
     getUserBlackList: context => {

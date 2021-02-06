@@ -7,9 +7,6 @@ let someFun = {
       groupchat: "groupChat",
       chatroom: "chatRoom"
     }
-    let ling = document.getElementById('lingsheng');
-    console.log(ling);
-    ling.play()
     let serverMsgId = msg.id
     let chatType = Type[msg.type]
     switch (msg.contentsType) {

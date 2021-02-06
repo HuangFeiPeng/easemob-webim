@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="conversation_content">
-      <vue-scroll :ops="ops">
+      <vue-scroll :ops="ops" ref="cv">
         <ul
           class="conversation_list"
           v-for="(item, index) in converStation"
@@ -29,7 +29,8 @@
                 <span class="username" v-if="item.converBody.chatType.type ==='singleChat'">{{ item.key }}</span>
                 <span class="groupname" v-else>{{ item.converBody.chatType.groupName }}</span>
                 <!-- 如果是会话列表拉取的lastMsg使用该方式转时间戳 -->
-                <span class="time" v-if="item.converBody.isChannel">{{
+                <!-- <span class="time" v-if="item.converBody.isChannel">{{ -->
+                <span class="time">{{
                   changeTime(item.converBody.lastMsg.timestamp)
                 }}</span>
                 <span
@@ -110,6 +111,7 @@ export default {
   watch: {
     conversationList() {
       // console.log(">>>>>>", 111)
+      this.moveScrollBar()
     }
   },
   methods: {
@@ -152,7 +154,17 @@ export default {
         //把发送过channel_ack的unReadNum红点统计消除。
         this.$set(data.converBody,'unReadNum',0)
       }
-    }
+    },
+    //调整会话列表滚动条位置。
+    moveScrollBar() {
+      this.$refs["cv"].scrollTo(
+        {
+          y: -1000000000
+        },
+        1000,
+        "easeInQuad"
+      )
+    },
   }
 }
 </script>
