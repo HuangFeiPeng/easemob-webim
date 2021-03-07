@@ -40,6 +40,8 @@ conn.listen({
     window.Vue.$store.dispatch('getGroupsList');
     //登陆成功获取会话列表
     window.Vue.$store.dispatch('getConversationList');
+    window.Vue.$store.dispatch('getUserBlackList');
+    
   }, //连接成功回调
   onClosed: function() {
     console.log(">>>>环信断开连接")
@@ -73,6 +75,7 @@ conn.listen({
     console.log(">>>好友请求被同意", msg)
   }, // 好友请求被同意
   onTextMessage: function(msg) {
+    console.log('>>>>>收到文本消息',msg);
     someFun.otherMsg(msg)
     // someFun(msg)
   }, //收到文本消息
@@ -162,7 +165,10 @@ conn.listen({
     // console.log(">>>>收到已读回执", message);
   }, //收到消息已读回执
   onCreateGroup: function() {}, //创建群组成功回执（需调用createGroupNew）
-  onMutedMessage: function() {} //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
+  onMutedMessage: function() {}, //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
+  onChannelMessage: function(message){
+    console.log('>>>>>>>>onChannelMessage',message);
+  }      //收到整个会话已读的回执，在对方发送channel ack时会在这个回调里收到消息
 })
 
 export default WebIM

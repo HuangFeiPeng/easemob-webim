@@ -30,7 +30,6 @@ export default {
       accessToken: this.userInfo.token,
       appKey: this.$WebIM.config.appkey
     })
-    setTimeout(()=>{this.$store.dispatch('getUserBlackList')},500)
   },
 
   components: {

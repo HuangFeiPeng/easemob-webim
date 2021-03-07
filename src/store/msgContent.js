@@ -112,43 +112,43 @@ function addNowMsg(data) {
 //此处设计思路为，如果该条消息在会话中有那么就更改lastMsg，如果没有的话那么就再新增一个会话列表到conversationList里。
 function addConversationList(data) {
   //拿到当前的会话列表数组
-  const nowConversationList = window.Vue.$store.state.chatStore.conversationList;
-  let converKey = ""; //存放新消息id用作后期新会话的key
+  const nowConversationList = window.Vue.$store.state.chatStore.conversationList
+  let converKey = "" //存放新消息id用作后期新会话的key
   let nowConverKey = [] //存放所有已有会话列表所有的key
   if (data.chatType === "singleChat") {
     data.right ? (converKey = data.to) : (converKey = data.from)
   } else {
-    console.log('>>>>>>进入了群聊');
     converKey = data.to
   }
   //循环当前已有会话列表，并将其key push 进nowConverKey
-  nowConversationList && nowConversationList.forEach((item, index) => {
-    // item.key === converKey && console.log('>>>>>会话列表里有');
-     nowConverKey.push(item.key)
-  })
-  //为了获取converKey 在数组中的下标
-  let _index = nowConverKey && nowConverKey.findIndex((value)=> value == converKey);
-  console.log(_index);
+  nowConversationList &&
+    nowConversationList.forEach(item => {
+      console.log('>>>>>nowConversationList',item.key);
+      nowConverKey.push(item.key)
+    })
   //判断新消息的key是否存在于已有的会话list中
-  if (nowConverKey.includes(converKey)) {
-    console.log('>>>>更新lastMsg');
-    data.converKey = converKey;
-    window.Vue.$store.commit('updataConversation',data);
-    if (_index !==-1 && _index !== 0) {
-      console.log('>>>>>>执行更新lastMsg切置顶');
-      window.Vue.$store.dispatch('setTopConversationList', { conver_index:_index})
+  if (nowConverKey.includes(converKey)) { //存在即是更新会话列表的lastMsg
+    let _index = nowConverKey && nowConverKey.findIndex(value => value == converKey)
+    console.log(">>>>更新lastMsg")
+    data.converKey = converKey
+    window.Vue.$store.commit("updataConversation", data)
+    if (_index !== -1 && _index !== 0) {
+      //该条消息存在且下标不为0则执行置顶。
+      window.Vue.$store.dispatch("setTopConversationList", {
+        conver_index: _index
+      })
     }
-  } else {
-    data.converKey = converKey;
-    console.log('>>>>>添加一个新的会话列表',window.Vue);
-    window.Vue.$store.commit('loadConversation', data)
-    if (_index !==-1 && _index !== 0) {
-      console.log('>>>>>>执行更新lastMsg切置顶');
-      window.Vue.$store.dispatch('setTopConversationList', { conver_index:_index})
+  } else { //不存在则在会话列表的数组中push进去一个新的会话。
+    let _index = nowConverKey && nowConverKey.findIndex(value => value == converKey) //为了拿到当前该会话的下标
+    data.converKey = converKey
+    window.Vue.$store.commit("loadConversation", data)
+    if (_index !== -1 && _index !== 0) {
+      //该条消息存在且下标不为0则执行置顶。
+      window.Vue.$store.dispatch("setTopConversationList", {
+        conver_index: _index
+      })
     }
   }
-  // console.log('>>>>新消息的key是否存在于会话列表中',); 
-  // console.log('>>>>>>>>>>>>nowConverdationList',converKey,nowConverKey);
 }
 
 const msgContent = {
@@ -184,9 +184,9 @@ const msgContent = {
           //   console.log('>>>>>>getNowMsgs',getNowMsgs);
           //   // state.nowMsgList.push(result)
           if (result) {
-            var getNowMsgs = state.msgList[chatType][result];
-            state.nowMsgList = getNowMsgs;
-            console.log('>>>>>>getNowMsgs', getNowMsgs);
+            var getNowMsgs = state.msgList[chatType][result]
+            state.nowMsgList = getNowMsgs
+            console.log(">>>>>>getNowMsgs", getNowMsgs)
           }
           break
         case "groupChat":
@@ -198,7 +198,7 @@ const msgContent = {
           addConversationList(data.msgContent)
           var resultGroup = addNowMsg(data.msgContent)
           if (resultGroup) {
-            var getNowGroupMsgList = state.msgList[chatType][resultGroup];
+            var getNowGroupMsgList = state.msgList[chatType][resultGroup]
             state.nowMsgList = getNowGroupMsgList
           }
           break
@@ -209,7 +209,7 @@ const msgContent = {
             data
           )
           var resultChatRoom = addNowMsg(data.msgContent)
-          var getNoWRoomMsgList = state.msgList[chatType][resultChatRoom];
+          var getNoWRoomMsgList = state.msgList[chatType][resultChatRoom]
           state.nowMsgList = getNoWRoomMsgList
           break
         default:
@@ -218,7 +218,7 @@ const msgContent = {
     },
     //将获取到的当前联系人的消息往来添加进nowMsgList
     addNowMessage: (state, payload) => {
-      console.log('>>>>>触发添加nowMsgList', payload);
+      console.log(">>>>>触发添加nowMsgList", payload)
       state.nowMsgList = payload
       // state.nowMsgList.push(payload);
     }
@@ -236,12 +236,11 @@ const msgContent = {
         console.log(key)
         var msgBody = context.state.msgList[type][key] || []
         if (msgBody.length != 0) {
-          console.log('>>>>提交');
+          console.log(">>>>提交")
           context.commit("addNowMessage", msgBody)
         } else {
-          context.commit('addNowMessage', [])
+          context.commit("addNowMessage", [])
         }
-
       }
     },
     //发送一条文本消息
@@ -269,10 +268,10 @@ const msgContent = {
         }, //扩展消息
         success: function (id, serverMsgId) {
           console.log("send private text Success", id, serverMsgId)
+          msgContent.id = serverMsgId;
           context.commit("addNewMessage", {
             data: {
-              msgContent,
-              serverMsgId
+              msgContent
             },
             chatType: step.type
           })
@@ -368,7 +367,7 @@ const msgContent = {
           onFileUploadComplete: function (res) {
             // 消息上传成功
             console.log("onFileUploadComplete", res)
-            console.log(res);
+            console.log(res)
             var imgUrl = `${res.uri}/${res.entities[0].uuid}` //拼接图片URL
             return (msgUrl = imgUrl)
           },

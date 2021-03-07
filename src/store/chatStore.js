@@ -1,10 +1,16 @@
 import WebIM from "@/utils/WebIM.js"
-//该function为功能为将会话列表的ID截取出来。
+import {
+  CheckboxGroup
+} from "element-ui"
+//该函数的功能为，将会话列表的channel_id截取出环信。
 function getUserId(str) {
   // console.log('name', str)
-  if (typeof str !== 'string') return '';
-  return (str.match(/ceshi_(\S*)@|ceshi_(\S*)/)[1] || str.match(/ceshi_(\S*)@|ceshi_(\S*)/)[2])
-  // return (str.match(/ceshi_(\S*)@|chatdemoui(\S*)/)[1] || str.match(/chatdemoui_(\S*)@|chatdemoui_(\S*)/)[2])
+  if (typeof str !== "string") return ""
+  return (
+    str.match(/ceshi_(\S*)@|ceshi_(\S*)/)[1] ||
+    str.match(/ceshi_(\S*)@|ceshi_(\S*)/)[2]
+  )
+  // return (str.match(/chatdemoui(\S*)@|chatdemoui(\S*)/)[1] || str.match(/chatdemoui_(\S*)@|chatdemoui_(\S*)/)[2])
 }
 const chatStore = {
   state: {
@@ -15,6 +21,7 @@ const chatStore = {
       chatroomsList: []
     },
     //会话列表
+    user_Channel_Status: null, //该字段为用来存储会话列表接口是否在首次登陆被调用
     conversationList: [],
     //黑名单列表
     blackFriendList: [],
@@ -31,7 +38,7 @@ const chatStore = {
     }
   },
   mutations: {
-    //加载列表
+    //加载好友群组聊天室列表
     loadList: function (state, payload) {
       const {
         data,
@@ -41,20 +48,21 @@ const chatStore = {
     },
     //加载会话列表
     loadConversation: (state, payload) => {
-      // console.log(payload);
-      if (payload.isChannel) { //如果是通过会话列表接口拉取的数据进入
-        let {
+      console.log('>>>>>>触发push会话列表');
+      if (payload.isChannel) {
+        //如果是通过会话列表接口拉取的数据进入
+        const {
           channel_id,
           meta,
           unread_num
-        } = payload;
+        } = payload
         let {
           bodies,
           ext,
           from,
           to
         } = JSON.parse(meta.payload) //payload的数据转为对象并解构
-        let getId = channel_id && getUserId(channel_id); //通过截取拿到id
+        let getId = channel_id && getUserId(channel_id) //通过截取拿到id
         //将channel_id 截取判断其会话类型是单聊还是群聊 或为 聊天室
         let chatType = id => {
           let idType = id.split("@")
@@ -65,16 +73,17 @@ const chatStore = {
           if (idType[1] === "easemob.com") {
             typeInfo.type = "singleChat"
           } else {
-            let groupsList = state.aboutList.groupsList;
-            groupsList && groupsList.forEach((item) => {
-              //查询当前群组列表里面的id，如果getId存在于则为群组，否则则是聊天室（聊天室的话type,groupName都设为了""字符串
-              if (item.groupid === getId) {
-                return typeInfo = {
-                  type: "groupChat",
-                  groupName: item.groupname
+            let groupsList = state.aboutList.groupsList
+            groupsList &&
+              groupsList.forEach(item => {
+                //查询当前群组列表里面的id，如果getId存在于则为群组，否则则是聊天室（聊天室的话type,groupName都设为了""字符串
+                if (item.groupid === getId) {
+                  return (typeInfo = {
+                    type: "groupChat",
+                    groupName: item.groupname
+                  })
                 }
-              }
-            })
+              })
           }
           return typeInfo
         }
@@ -97,15 +106,12 @@ const chatStore = {
           chatType: chatType(channel_id),
           isChannel: true //是否是从会话列表拉取出来的
         }
-        //这一步操作是为了只处理单人以及群组类型的会话上屏显示
-        if (chatType(channel_id).type) {
-          state.conversationList.push({
-            key: getId,
-            converBody
-          })
-        }
-
-      } else {
+        //这一步操作是为了只处理单人以及群组类型的会话上屏显示，因为如果为聊天室的话，chatType(channel_id).type的值为“”
+        chatType(channel_id).type && state.conversationList.push({
+          key: getId,
+          converBody
+        })
+      } else if (state.user_Channel_Status == true) {   
         const {
           converKey,
           from,
@@ -118,7 +124,32 @@ const chatStore = {
         } = payload
         //会话消息构建的body体
         let changeMsgTyepe = {
-          "TEXT": "txt"
+          TEXT: "txt",
+          IMAGE: "img",
+          FILE: "file",
+          VOICE: "audio"
+        }
+        let changeGroupName = chatType => {
+          console.log('>>>>>>>>>>>>>>>_____', chatType);
+          let typeInfo = {
+            type: "",
+            groupName: ""
+          }
+          if (chatType === "singleChat") {
+            typeInfo.type = "singleChat"
+          } else {
+            let groupsList = state.aboutList.groupsList
+            groupsList &&
+              groupsList.forEach(item => {
+                if (converKey ===item.groupid) {
+                  return (typeInfo = {
+                    type: "groupChat",
+                    groupName: item.groupname
+                  })
+                }
+              })
+          }
+          return typeInfo
         }
         let converBody = {
           id: converKey,
@@ -138,23 +169,18 @@ const chatStore = {
             timestamp: time,
             to: to
           },
-          chatType: {
-            groupName: "",
-            type: chatType
-          }
-
+          chatType: changeGroupName(chatType)
         }
+
         state.conversationList.push({
           key: converKey,
           converBody
         })
-        console.log(payload);
-      }
-      // console.log(getId);
 
+      }
     },
-    //更新会话列表
-    updataConversation: (state,payload)=>{
+    //更新会话列表（聊天页新增消息时，保证会话列表里的lastMsg可以同步更新。）
+    updataConversation: (state, payload) => {
       const {
         converKey,
         from,
@@ -165,12 +191,14 @@ const chatStore = {
         time,
         chatType
       } = payload
-    console.log(payload);
-    let toBeUpdate = {};
-    let changeMsgTyepe = {
-      "TEXT": "txt"
-    }
-    let newLastMsg = {
+      let toBeUpdate = {} //待更新的某条会话
+      let changeMsgTyepe = {
+        TEXT: "txt",
+        IMAGE: "img",
+        FILE: "file",
+        VOICE: "audio"
+      }
+      let newLastMsg = { //设立newLastMsg的结构
         from: from,
         id: converKey,
         msgBody: {
@@ -184,17 +212,22 @@ const chatStore = {
         },
         timestamp: time,
         to: to
-    }
-      state.conversationList.forEach(item=>{
-        console.log('>>>>>>更新会话列表',item);
-        if (item.key === converKey && item.converBody.chatType.type === chatType) {
-          return toBeUpdate = item;
-        }
-      })
-      // console.log('>>>>>>>toBeUpdate',toBeUpdate);
-       toBeUpdate.converBody.lastMsg = newLastMsg;
-      // console.log(toBeUpdate);
-
+      }
+      state.conversationList &&
+        state.conversationList.forEach(item => {
+          if (
+            item.key === converKey &&
+            item.converBody.chatType.type === chatType
+          ) {
+            return (toBeUpdate = item)
+          }
+        })
+      toBeUpdate.converBody.lastMsg = newLastMsg
+    },
+    //修改会话接口是否调用状态
+    changeUserChannelStatus: (state, payload) => {
+      console.log('>>>>>>会话列表接口状态发生修改');
+      state.user_Channel_Status = true;
     },
     //置顶选中会话
     topConversation: (state, payload) => {
@@ -207,7 +240,6 @@ const chatStore = {
     //初始化会话列表
     inItConversation: (state, payload) => {
       state.conversationList = []
-
     },
     //设置选中ID的基本信息
     chatName: (state, payload) => {
@@ -232,35 +264,38 @@ const chatStore = {
     },
     //添加黑名单
     loadBlackList: (state, payload) => {
-      const data = payload;
-      console.log('>>>>>黑名单加载', payload);
-      data && data.forEach(item => {
-        // console.log(element);
-        if (item != '') {
-          state.blackFriendList.push(item || []);
-        }
-      });
-
+      const data = payload
+      data &&
+        data.forEach(item => {
+          // console.log(element);
+          if (item != "") {
+            state.blackFriendList.push(item || [])
+          }
+        })
     }
   },
   actions: {
     //获取会话列表数据
     getConversationList: context => {
-      WebIM.conn.getSessionList().then((res) => {
-        // console.log('>>>>>>拿到会话列表', res.data.channel_infos);
+      WebIM.conn.getSessionList().then(res => {
+        //会话列表接口拉取成功，执行修改会话列表是否拉取的状态为true
+        context.commit("changeUserChannelStatus");
         let allChannel_infos = res.data.channel_infos;
-        allChannel_infos && allChannel_infos.forEach(item => {
-          item.isChannel = true; //标明是通过会话列表拿到的消息
-          item && context.commit('loadConversation', item)
-        })
+        allChannel_infos &&
+          allChannel_infos.forEach(item => {
+            item.isChannel = true //表明是通过会话列表拿到的消息
+            item && context.commit("loadConversation", item)
+          })
 
-        // res.data && context.commit('loadConversation',res.data.channel_infos);
+      }).catch(err=>{
+        console.log('>>>>会话列表接口调用失败',err);
+        context.commit("changeUserChannelStatus");
       })
     },
     //置顶选中的会话列表
     setTopConversationList: (context, step) => {
       //获取当前的state中存放的会话列表
-      let nowConverList = context.state.conversationList;
+      let nowConverList = context.state.conversationList
       //拿到splice返回的数组目标
       let delConver = nowConverList.splice(step.conver_index, 1)
       //将删除的目标ID提交给mutations
@@ -270,29 +305,23 @@ const chatStore = {
     },
     //调用获取黑名单列表
     getUserBlackList: context => {
-      WebIM.conn.getBlacklist().then((res) => {
+      WebIM.conn.getBlacklist().then(res => {
         // console.log('>>>>>>获取黑名单成功',res);
-        context.commit('loadBlackList', res.data)
+        context.commit("loadBlackList", res.data)
       })
       // console.log(res);
     },
     //调用拉取好友列表SDK
     getFriendsList: context => {
-      let blackList = context.state.blackFriendList;
-
-      // console.log(blackList);
-      // console.log('>>>>>拿到黑名单列表',context.state.blackFriendList);
+      let blackList = context.state.blackFriendList; //获取黑名单列表
       WebIM.conn.getRoster({
         success: roster => {
           let arr = []
           roster.filter(item => {
             if (blackList && !blackList.includes(item.name)) {
-              // console.log(item);
               return arr.push(item)
             }
-            // console.log(item.name);
           })
-          // console.log(arr);
           context.commit("loadList", {
             type: "friendsList",
             data: arr

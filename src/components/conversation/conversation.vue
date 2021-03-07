@@ -26,8 +26,14 @@
             </div>
             <div class="conversation_main">
               <div class="main_title">
-                <span class="username" v-if="item.converBody.chatType.type ==='singleChat'">{{ item.key }}</span>
-                <span class="groupname" v-else>{{ item.converBody.chatType.groupName }}</span>
+                <span
+                  class="username"
+                  v-if="item.converBody.chatType.type === 'singleChat'"
+                  >{{ item.key }}</span
+                >
+                <span class="groupname" v-else>{{
+                  item.converBody.chatType.groupName
+                }}</span>
                 <!-- 如果是会话列表拉取的lastMsg使用该方式转时间戳 -->
                 <!-- <span class="time" v-if="item.converBody.isChannel">{{ -->
                 <span class="time">{{
@@ -101,7 +107,7 @@ export default {
   },
   created() {
     this.changeTime = changeTime
-    this.getconversationList();
+    this.getconversationList()
   },
   computed: {
     ...mapState({
@@ -115,26 +121,26 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getConversationList","getUserName","setTopConversationList"]),
+    ...mapActions([
+      "getConversationList",
+      "getUserName",
+    ]),
     getconversationList() {
+      //TO DO 在渲染之前去进行一次过滤
       this.converStation = this.conversationList
     },
 
     startChat(data, idx) {
-      const { chatType,id} = data.converBody;
-      let Type ={
-        singleChat:0,
-        groupChat:1
+      const { chatType, id } = data.converBody
+      let Type = {
+        singleChat: 0,
+        groupChat: 1
       }
-      //将当前点击的会话li，置顶
-      this.setTopConversationList({
-        conver_index:idx
-      })
       //将当前点击的会话li，set入userInfo
       this.getUserName({
-        chatID:id,
-        chatName:chatType.groupName,
-        type:Type[chatType.type]
+        chatID: id,
+        chatName: chatType.groupName,
+        type: Type[chatType.type]
       })
       //点击会话列表的时候如果有未读那么发送channel_ack
       //判断条件为unReadNum大于0的时候发channel_ack
@@ -152,7 +158,7 @@ export default {
         }
         this.$conn.send(msg.body)
         //把发送过channel_ack的unReadNum红点统计消除。
-        this.$set(data.converBody,'unReadNum',0)
+        this.$set(data.converBody, "unReadNum", 0)
       }
     },
     //调整会话列表滚动条位置。
@@ -164,7 +170,7 @@ export default {
         1000,
         "easeInQuad"
       )
-    },
+    }
   }
 }
 </script>
