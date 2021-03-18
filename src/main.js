@@ -4,7 +4,7 @@ import App from "./App.vue"
 import router from "./router"
 import store from "./store"
 import WebIM from "./utils/WebIM"
-import { Message, Notification } from "element-ui"
+import { Message, Notification,MessageBox } from "element-ui"
 import "element-ui/lib/theme-chalk/index.css"
 import Storage from "./utils/storage"
 
@@ -18,6 +18,7 @@ Vue.prototype.$WebIM = WebIM
 Vue.prototype.$conn = WebIM.conn
 Vue.prototype.$message = Message
 Vue.prototype.$notify = Notification
+Vue.prototype.$confirm = MessageBox.confirm,
 window.Vue = new Vue({
   router,
   store,

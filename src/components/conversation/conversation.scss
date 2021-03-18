@@ -63,8 +63,31 @@
 
             }
         }
-
-
+        .add_Icon{
+            position: absolute;
+            right: 15px;
+            top: 32px;
+            img{
+                width: 25px;
+                height: 25px;
+            }
+            cursor: pointer;
+            z-index: 99;
+        }
+        .add_Box{
+            position: absolute;
+            left: 320px;
+            top: 37px;
+            width: 200px;
+            height: 200px;
+            background: rgba(247, 245, 245, 0.336);
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            &:hover{
+                box-shadow: 2px 2px 2px gray;
+            }
+        }
     }
 
     .conversation_content {

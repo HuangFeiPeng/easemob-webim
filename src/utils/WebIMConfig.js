@@ -37,6 +37,8 @@ var config = {
   restServer: getUrl().apiUrl, // rest Server地址
 
   // appkey: "easemob-demo#chatdemoui", // App key
+  // appkey: "1110201022157933#ceshi2", // App key
+  // appkey: "easemob-demo#easeim", // App key
   appkey: "1110201022157933#ceshi", // App key
 
   https: true, // 是否使用https

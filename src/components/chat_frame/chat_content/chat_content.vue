@@ -100,7 +100,7 @@ export default {
         { class: "iconfont icon-tuku", title: "发送图片" },
         { class: "iconfont icon-wenjian", title: "发送文件" },
         { class: "iconfont icon-yuyin", title: "发送语音" },
-        { class: "iconfont icon-lishi", title: "拉取历史" }
+        // { class: "iconfont icon-lishi", title: "拉取历史" } //拉取历史消息功能暂时先不写了，没别的累了先不写了😢
       ]
     }
   },

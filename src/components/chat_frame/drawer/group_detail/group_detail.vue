@@ -19,7 +19,7 @@
           </p>
 
           <!-- 修改群组信息 -->
-          <span class="groupChangeInfo_btn" v-if="roleNum.num == 0">
+          <span class="groupChangeInfo_btn" v-if="roleNum.num == 0" >
             <img
               class="amend"
               @click="setGroupName"
