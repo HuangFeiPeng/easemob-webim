@@ -5,10 +5,7 @@
     </div>
 </template>
 <script>
-<<<<<<< HEAD
 import {mapState} from 'vuex';
-=======
->>>>>>> origin/master
 export default {
     props:{
         toID:{

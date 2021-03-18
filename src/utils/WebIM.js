@@ -94,11 +94,7 @@ conn.listen({
   onContactRefuse: function (msg) {
     window.Vue.$message({
       type: "error",
-<<<<<<< HEAD
       message: `${msg.from}拒绝了你的好友申请😿`,
-=======
-      message: `${msg.from}拒绝了你😿`,
->>>>>>> origin/master
       center: true
     })
     console.log("收到好友请求被拒绝", msg)
@@ -173,7 +169,6 @@ conn.listen({
     WebIM.utils.download.call(conn, option)
   }, //收到视频消息
   onPresence: function (msg) {
-<<<<<<< HEAD
     console.log(msg);
     switch (msg.type) {
       case 'rmGroupMute':
@@ -343,9 +338,6 @@ conn.listen({
     }
     console.log('>>>>>>触发onPresence', msg);
 
-=======
-    console.log('>>>>>>触发onPresence', msg);
->>>>>>> origin/master
   }, //处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
   onRoster: function () {}, //处理好友申请
   onInviteMessage: function () {}, //处理群组邀请
