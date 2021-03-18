@@ -94,7 +94,7 @@ conn.listen({
   onContactRefuse: function (msg) {
     window.Vue.$message({
       type: "error",
-      message: `${msg.from}拒绝了你😿`,
+      message: `${msg.from}拒绝了你的好友申请😿`,
       center: true
     })
     console.log("收到好友请求被拒绝", msg)
@@ -169,7 +169,175 @@ conn.listen({
     WebIM.utils.download.call(conn, option)
   }, //收到视频消息
   onPresence: function (msg) {
+    console.log(msg);
+    switch (msg.type) {
+      case 'rmGroupMute':
+        // 解除群组一键禁言
+        break;
+      case 'muteGroup':
+        // 群组一键禁言
+        break;
+      case 'rmUserFromGroupWhiteList':
+        // 删除群白名单成员
+        break;
+      case 'addUserToGroupWhiteList':
+        // 增加群白名单成员
+        break;
+      case 'deleteFile':
+        // 删除群文件
+        break;
+      case 'uploadFile':
+        // 上传群文件
+        break;
+      case 'deleteAnnouncement':
+        // 删除群公告
+        break;
+      case 'updateAnnouncement':
+        // 更新群公告
+        break;
+      case 'removeMute':
+        // 解除禁言
+        break;
+      case 'addMute':
+        // 禁言
+        break;
+      case 'removeAdmin':
+        // 移除管理员
+        break;
+      case 'addAdmin':
+        // 添加管理员
+        break;
+      case 'changeOwner':
+        // 转让群组
+        break;
+      case 'direct_joined':
+        // 直接被拉进群
+        break;
+      case 'leaveGroup':
+        window.Vue.$message({
+          type: "success",
+          message: `移除成功`,
+          center: true
+        })
+        // 退出群
+        break;
+      case 'memberJoinPublicGroupSuccess':
+        window.Vue.$message({
+          type: "success",
+          message: `${msg.from}加入了${msg.gid}群`,
+          center: true
+        })
+        // 加入公开群成功
+        break;
+      case 'removedFromGroup':
+        window.Vue.$message({
+          type: "error",
+          message: `${msg.from}将您移出${msg.gid}群`,
+          center: true
+        })
+        // 从群组移除
+        break;
+      case 'invite_decline':
+        // 拒绝加群邀请
+        break;
+      case 'invite_accept':
+        // 接收加群邀请（群含权限情况）
+        break;
+      case 'invite':
+        window.Vue.$confirm(`收到${msg.owner}的邀请入群`, '群组邀请提示', {
+          confirmButtonText: '同意邀请',
+          cancelButtonText: '拒绝邀请',
+          type: 'success',
+          center: true
+        }).then(() => {
+          // console.log(11);
+          let options = {
+            groupId: msg.gid                          // 群组ID
+        };
+        conn.joinGroup(options).then((res) => {
+            console.log(res)
+        })
+          window.Vue.$notify({
+            title: `同意申请`,
+            // message: `与${msg.from}的好友关系建立，找他聊聊！`,
+            type: "success"
+          })
+        }).catch(() => {
+         
+          window.Vue.$notify({
+            title: `驳回申请`,
+            // message: `与${msg.from}的好友关系建立，找他聊聊！`,
+            type: "error"
+          })
+        })
+        // 接收加群邀请
+        break;
+      case 'joinPublicGroupDeclined':
+        window.Vue.$notify({
+          title: `申请驳回`,
+          message: `${msg.from}拒绝了你的入群申请，（群组：${msg.gid}）`,
+          type: "error"
+        })
+        // 拒绝入群申请
+        break;
+      case 'joinPublicGroupSuccess':
+        window.Vue.$notify({
+          title: `申请通过`,
+          message: `${msg.from}同意了你的入群申请，（群组：${msg.gid}）`,
+          type: "success"
+        })
+        // 同意入群申请
+        break;
+      case 'joinGroupNotifications':
+        window.Vue.$confirm(`收到${msg.owner}的加群申请`, '群组申请提示', {
+          confirmButtonText: '同意申请',
+          cancelButtonText: '拒绝申请',
+          type: 'success',
+          center: true
+        }).then(() => {
+          // console.log(11);
+          let options = {
+            applicant: msg.owner, // 申请加群的用户名
+            groupId: msg.gid // 群组ID
+          };
+          window.Vue.$conn.agreeJoinGroup(options).then((res) => {
+            console.log(res)
+          })
+          window.Vue.$notify({
+            title: `同意申请`,
+            // message: `与${msg.from}的好友关系建立，找他聊聊！`,
+            type: "success"
+          })
+        }).catch(() => {
+          let options = {
+            applicant: msg.owner, // 申请加群的用户名
+            groupId: msg.gid // 群组ID
+          };
+          window.Vue.$conn.rejectJoinGroup(options).then((res) => {
+            console.log(res)
+          })
+          window.Vue.$notify({
+            title: `驳回申请`,
+            // message: `与${msg.from}的好友关系建立，找他聊聊！`,
+            type: "error"
+          })
+        })
+        // 申请入群
+        break;
+      case 'leave':
+        // 退出群
+        break;
+      case 'join':
+        // 加入群
+        break;
+      case 'deleteGroupChat':
+        // 解散群
+        break;
+      default:
+        break;
+    }
     console.log('>>>>>>触发onPresence', msg);
+
   }, //处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
   onRoster: function () {}, //处理好友申请
   onInviteMessage: function () {}, //处理群组邀请
