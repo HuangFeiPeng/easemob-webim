@@ -4,9 +4,15 @@
       <h3 class="title">
         会话列表
       </h3>
+      <div class="add_Icon" @click.stop="isAddBox = !isAddBox">
+        <img src="@/assets/image/加.png" alt="">
+      </div>
+      <AddBox class="add_Box" v-if="isAddBox"></AddBox>
       <div class="conversation_search">
         <input id="search_keyword" type="text" placeholder="点击进行搜索...." />
       </div>
+      
+      
     </div>
     <div class="conversation_content">
       <vue-scroll :ops="ops" ref="cv">
@@ -94,15 +100,17 @@
 </template>
 <script>
 import "./conversation.scss"
-import changeTime from "@/utils/getTime"
+import changeTime from "@/utils/getTime" //引入转换时间戳的方法
 import { mapState, mapActions } from "vuex"
 import Ops from "@/utils/scrollConfig"
+import AddBox from './add _Fun/add_box';
 // import { mapActions } from 'vuex';
 export default {
   data() {
     return {
       ops: Ops, //滚动配置,
-      converStation: []
+      converStation: [],
+      isAddBox:false
     }
   },
   created() {
@@ -171,6 +179,9 @@ export default {
         "easeInQuad"
       )
     }
+  },
+  components: {
+    AddBox
   }
 }
 </script>
