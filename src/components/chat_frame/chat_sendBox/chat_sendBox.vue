@@ -80,9 +80,9 @@ export default {
           this.sendTextMessage()
           event.preventDefault() //阻止浏览器默认换行
           break
-        case 16:
-          this.inputBox = this.inputBox + "\n" //换行
-          break
+        // case 16:
+        //   this.inputBox = this.inputBox + "\n" //换行
+        //   break
         default:
           break
       }

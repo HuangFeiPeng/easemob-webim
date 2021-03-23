@@ -33,12 +33,10 @@ export default {
       }
       this.$conn.listGroups(options).then(res => {
         console.log(res)
-        this.$parent.publicGroups = res.data;
-        
+        this.$parent.publicGroups = res.data
       })
     },
-    async joinGroups() {
-      // await this.getPublicGroups()
+    joinGroups() {
       let options = {
         groupId: this.toID, // 群组ID
         description: "1111111"
@@ -71,6 +69,36 @@ export default {
             })
           }
           this.$parent.toId = ""
+        })
+    },
+    getGorupInfo() {
+      let options = {
+        groupId: this.toID // 群组id
+      }
+      this.$conn
+        .getGroupInfo(options)
+        .then(res => {
+          console.log(">>>>>>>群组详情", res.data[0].public)
+          if (res.data[0].public) {
+            this.joinGroups()
+          } else {
+            this.$notify.error({
+              title: `申请加群失败🤪`,
+              message: `该群为私有群禁止申请加入！`
+            })
+            this.$parent.toId = ""
+            return
+          }
+        })
+        .catch(err => {
+          if (JSON.parse(err.data).error == "group_authorization") {
+            this.$notify.error({
+              title: `申请加群失败🤪`,
+              message: `该群为私有群禁止申请加入！`
+            })
+            this.$parent.toId = ""
+            return
+          }
         })
     }
   }

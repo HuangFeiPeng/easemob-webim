@@ -268,7 +268,7 @@ export default {
   async created() {
     await this.getGroupInfo()
     await this.getGroupAdmin()
-    this.setRole(), this.getGroupMuteList()
+    this.setRole()
   },
   computed: {
     ...mapState({
