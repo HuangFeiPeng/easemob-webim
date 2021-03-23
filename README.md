@@ -22,3 +22,7 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+#### 集成环信SDK完成的模拟即时通讯功能的简易demo。
+```
